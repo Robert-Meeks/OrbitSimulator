@@ -1,0 +1,298 @@
+package orbitSimulator;
+
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
+import net.miginfocom.swing.MigLayout;
+
+/* TO DO LIST 
+	- error messages in:
+		-- inputPanelChanger() for to out comes of the switch within it.
+*/	
+public class OrbitMainFrame extends JFrame {
+	
+	// FOR TESTING
+	private Border redBorder = 
+			BorderFactory.createLineBorder(Color.RED, 1);
+	private Border yellowBorder = 
+			BorderFactory.createLineBorder(Color.YELLOW, 1);
+	private Border greenBorder = 
+			BorderFactory.createLineBorder(Color.GREEN, 1);
+	private Border blueBorder = 
+			BorderFactory.createLineBorder(Color.BLUE, 1);
+	private Border cyanBorder = 
+			BorderFactory.createLineBorder(Color.CYAN, 1);
+	private Border orangeBorder = 
+			BorderFactory.createLineBorder(Color.ORANGE, 1);
+	private Border whiteBorder = 
+			BorderFactory.createLineBorder(Color.WHITE, 1);
+	// input panels
+	private JPanel defaultInputPanel; 
+	private JPanel circularPanel;
+	private JPanel ellipticalPanel;
+	//toolbar
+		// params
+		public static String orbitingBody;
+		public static HashMap<String, Double> orbitingBodyData;
+		// Parameterized components for comboboxes stored in respecive arraylists 
+			// OrbitTypes  
+			private String selectType = "Select Type"; // first entry
+			private String circular = "Circular"; // second entry
+			private String elliptical = "Elliptical"; // third entry
+			private String hyperbolic = "Hyperbolic"; // fourth entry
+			// OrbitingBodies
+			private String selectOrbitingBody = "Select Orbiting Body";
+			private String earth = "Earth";
+			private String moon = "Moon";
+			private String mars = "Mars";
+			// Maneuvres
+			private String selectManoeuvre = "Select Manoeuvre";
+			private String orbit = "Orbit";
+			private String hohmannTransfer = "Hohmann Transfer";
+		// BUTTONS
+			private JButton btnSelectOrbitType;
+			private JButton btnSelectOrbiting;
+			private JButton btnSelectManoeuvre;
+		// COMBOBOX
+			private JComboBox comboBoxOrbitType;
+			final JComboBox comboBoxOrbitingBody; 
+			private JComboBox comboBoxManoeuvreType;
+	// OUTPUTS
+	private JPanel OuputPanel;
+
+	
+	// Constructor
+	public OrbitMainFrame()
+	{
+		getContentPane().setLayout(new MigLayout("", "[min!][][281.00][grow]", "[121.00][grow]"));
+		
+		// TOOLBAR - mig layout
+			JPanel toolbarPanel = new JPanel();//MainToolbar();
+			getContentPane().add(toolbarPanel, "cell 0 0 4 1,growx,aligny top");
+			toolbarPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+			toolbarPanel.setLayout(new MigLayout("", "[][17.00][79.00][109.00px][][100px]", "[][16px][][]"));
+			
+			JLabel lblToolbarHeading = new JLabel("Main scenario settings");
+			lblToolbarHeading.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+			lblToolbarHeading.setHorizontalAlignment(SwingConstants.LEFT);
+			toolbarPanel.add(lblToolbarHeading, "cell 0 0 4 1");
+			
+		// Listeners   
+			ActionListener comboBoxListener = new ActionListener() {
+				public void actionPerformed(ActionEvent e)
+				{
+					JComboBox clicked = (JComboBox)e.getSource();
+					if(clicked == comboBoxOrbitType)
+					{
+						System.out.println("combobox orbitType has been selected");
+						inputPanelChanger(comboBoxOrbitType.getSelectedItem().toString());
+					}
+					else if (clicked == comboBoxOrbitingBody)
+					{
+						if (comboBoxOrbitingBody.getSelectedItem().toString() == "Select Orbiting Body")
+						{
+							setOrbitingBody(null);
+							orbitingBodyData = null;
+						}
+						else
+						{
+						System.out.println(comboBoxOrbitingBody.getSelectedItem().toString());
+						setOrbitingBody(comboBoxOrbitingBody.getSelectedItem().toString());
+						SolarSystemDatabase ObjectSelectedToOrbit = new SolarSystemDatabase();
+						orbitingBodyData = ObjectSelectedToOrbit.getSolarSystemObjectInformation(orbitingBody.toLowerCase());
+						System.out.println("");
+						}
+					}
+					else if (clicked == comboBoxManoeuvreType) // It will probably be best to make this its own card panel with a default when not needed and then a different layout for the other choices. 
+					{
+						System.out.println("selected Manoeuvre");
+					}
+					else
+					{
+						System.out.println("Pretty sure this should never print, as there are no other comboBoxes but if I add one and forget to do anything with it I will know.");
+					}
+				}
+			};
+			
+		// Components of toolbar
+			//Buttons
+			JButton btnNewScenario = new JButton("New Scenario");
+			btnNewScenario.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// are you sure message JOptionPane.showMessageDialog(null, "My Goodness, this is so concise"); 
+					int reply = JOptionPane.showConfirmDialog(null, "Starting a new scenario will delete all inputs. Are you sure you want to do this?", null, JOptionPane.YES_NO_OPTION);
+					if (reply == JOptionPane.YES_OPTION)
+					{// method to reset scenario
+					newScenario();
+					}
+				}
+			});
+			toolbarPanel.add(btnNewScenario, "cell 5 1");
+			
+			// comboBoxes and associated arrays and lbls
+			JLabel lblWhatOrbit = new JLabel("Orbit type:");
+			lblWhatOrbit.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+			toolbarPanel.add(lblWhatOrbit, "cell 2 1,alignx left,gapright 0,aligny center");
+			
+			ArrayList<String> orbitTypes = new ArrayList<String>();
+			orbitTypes.add(new String(selectType));
+			orbitTypes.add(new String(circular));
+			orbitTypes.add(new String(elliptical));
+			orbitTypes.add(new String(hyperbolic));
+			comboBoxOrbitType = new JComboBox(orbitTypes.toArray());
+			comboBoxOrbitType.addActionListener(comboBoxListener);
+			comboBoxOrbitType.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+			toolbarPanel.add(comboBoxOrbitType, "cell 3 1,growx");
+			
+			JLabel lblOrbitingBody = new JLabel("Orbiting?");
+			lblOrbitingBody.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+			toolbarPanel.add(lblOrbitingBody, "cell 2 2,alignx left,aligny center");
+			
+			ArrayList<String> orbitingBody = new ArrayList<String>();
+			orbitingBody.add(new String(selectOrbitingBody));
+			orbitingBody.add(new String(earth));
+			orbitingBody.add(new String(moon));
+			orbitingBody.add(new String(mars));
+			comboBoxOrbitingBody = new JComboBox(orbitingBody.toArray());
+			comboBoxOrbitingBody.addActionListener(comboBoxListener);
+			comboBoxOrbitingBody.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+			toolbarPanel.add(comboBoxOrbitingBody, "cell 3 2,growx");
+			
+			JLabel lblManoeuvreType = new JLabel("Manoeuvre type?");
+			lblManoeuvreType.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+			toolbarPanel.add(lblManoeuvreType, "cell 2 3,alignx left,aligny center");
+			
+			ArrayList<String> manoeuvreTypes = new ArrayList<String>();
+			manoeuvreTypes.add(new String(selectManoeuvre));
+			manoeuvreTypes.add(new String(orbit));
+			manoeuvreTypes.add(new String(hohmannTransfer));
+			comboBoxManoeuvreType = new JComboBox(manoeuvreTypes.toArray());
+			comboBoxManoeuvreType.addActionListener(comboBoxListener);
+			comboBoxManoeuvreType.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+			toolbarPanel.add(comboBoxManoeuvreType, "cell 3 3,growx");
+		
+		// INPUT Panel
+			// Main panel - card Layout
+				JPanel inputPanel = new JPanel();
+				inputPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+				getContentPane().add(inputPanel, "cell 0 1 3 1,grow");
+				inputPanel.setLayout(new CardLayout(0, 0));
+			
+			// Default input panel - not sure wheter to giv this its own class or not...probably should...
+				defaultInputPanel = new JPanel();
+				inputPanel.add(defaultInputPanel, "defaultPanel");
+				defaultInputPanel.setLayout(new MigLayout("", "[][][][][]", "[][][39.00]"));
+				
+				JLabel lblInputAreaHeading = new JLabel("Input Area");
+				lblInputAreaHeading.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+				defaultInputPanel.add(lblInputAreaHeading, "cell 4 0");
+				
+				JLabel lblDefaultInputPanelText = new JLabel("<html>Please select the Orbit type above to begin<br>entering relevant data for the scenario<br>you wish to calculate.</html>");
+				defaultInputPanel.add(lblDefaultInputPanelText, "cell 1 1 4 2");
+			
+			// first Input Panel - circular - mig layout
+				circularPanel = new CircularOrbitInputs();
+				inputPanel.add(circularPanel, "circular");
+			
+			// second Input panel - elliptical - mig layout
+				ellipticalPanel = new EllipticalOrbitInputs();
+				inputPanel.add(ellipticalPanel, "elliptical");
+			
+			
+		
+		// OUTPUT Panel
+			final JPanel outputPanel = new OutputPanel();
+			outputPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+			getContentPane().add(outputPanel, "cell 3 1,grow");
+		
+			
+		// listener
+			((CircularOrbitInputs) circularPanel).setNewGraphics(new MainFrameListener(/*r, v, T, epsilon, i*/) {
+				//@Override
+				public void setNewGraphics(double r, double v, double T,
+						double epsilon, double i, String renderScale) {
+					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(r,v,T,epsilon,i, renderScale);
+				}
+				
+			});
+	
+	} // END CONSTRUCTOR
+	
+	protected void inputPanelChanger(String newParam) {
+		switch(newParam)
+		{
+		case "Selected Type":
+			newScenario();
+			break;
+		case "Circular":
+			circularPanel.setVisible(true);
+			defaultInputPanel.setVisible(false);
+			ellipticalPanel.setVisible(false);
+			break;
+		case "Elliptical":
+			ellipticalPanel.setVisible(true);
+			defaultInputPanel.setVisible(false);
+			circularPanel.setVisible(false);
+			break;
+		default :
+			// error message
+			break;
+		}
+		
+	}
+	public void setOrbitingBody(String orbiting)
+	{
+		orbitingBody = orbiting;
+	}
+	public static double getOrbitingBodyData(String planetParam)
+	{
+		return orbitingBodyData.get(planetParam);
+	}
+	private void newScenario()
+	{
+		// reset input panel
+		String activePanel = comboBoxOrbitType.getSelectedItem().toString().toLowerCase();
+		switch(activePanel)
+		{
+		case "circular":
+			CircularOrbitInputs.resetCircularPanel();
+			break;
+		case "elliptical":
+			EllipticalOrbitInputs.resetEllipticalPanle();
+			break;
+		}
+		// reset output panel
+		defaultInputPanel.setVisible(true);
+		circularPanel.setVisible(false);
+		ellipticalPanel.setVisible(false);
+		// orbit type combo back to default 
+		comboBoxOrbitType.setSelectedIndex(0);
+		// orbiting body combo back to default 
+		comboBoxOrbitingBody.setSelectedIndex(0);
+		// manoeuvre combo back to default 
+		comboBoxManoeuvreType.setSelectedIndex(0);
+		// reset parameters
+		setOrbitingBody(null);
+		orbitingBodyData = null;
+	}
+
+	
+	
+
+}
