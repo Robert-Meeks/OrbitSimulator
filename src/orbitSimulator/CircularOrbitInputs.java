@@ -218,6 +218,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 			else
 			{
 				CalculateCircularOrbit();
+				System.out.println("call newGraphicsListener");
 				newGraphicsListener.setNewGraphics(Double.parseDouble(tfRadius.getText()),
 						Double.parseDouble(tfVelocity.getText()), 
 						Double.parseDouble(tfPeriod.getText()), 
@@ -248,9 +249,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		// the method that can calculate all the other parameters using the input.
 		switch(selectedInputVariable)
 		{
-		case "Variable":
+		//case "Variable":
 			// I dont think it possible to get this far and to have not selected one of the others but just incase I put this in. 
-			System.out.println("turns out I do need error checking at CircularOrbitInput.CalculateCircularOrbit() in the switch first case 'Variable'.");
+			//System.out.println("turns out I do need error checking at CircularOrbitInput.CalculateCircularOrbit() in the switch first case 'Variable'.");
 		case "Radius":
 			System.out.println("the switch to recognise which input has been selected works");
 			CalculateOrbitWithRadius(tfRadius.getText());
@@ -265,8 +266,8 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 			CalculateOrbitWithPeriod(tfPeriod.getText());
 			break;
 		}
-		
 	}
+	
 	private void CalculateOrbitWithRadius(String radius) {
 		System.out.println("now inside the calculateOrbitWithRadius()");
 		// get vars required
@@ -287,8 +288,8 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		System.out.println("v = " + v);
 		tfSpecificMechanicalEnergy.setText(String.format("%.5f", epsilon));
 		tfPeriod.setText(String.format("%.5f", T));
-		
 	}
+	
 	private void CalculateOrbitWithVelocity(String velocity) {
 		// get vars required 
 		double mu = OrbitMainFrame.getOrbitingBodyData("mu");

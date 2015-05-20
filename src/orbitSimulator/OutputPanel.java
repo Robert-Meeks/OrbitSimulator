@@ -1,28 +1,31 @@
 package orbitSimulator;
 
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Shape;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JLabel;
-
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
-
-import javax.swing.JToggleButton;
-import javax.swing.JRadioButton;
-import javax.swing.SwingConstants;
-
 
 public class OutputPanel extends JPanel {
+	// tab panel
+	private JTabbedPane tabbedPane;
 	// JPanels
 	private JPanel outputTopView;
+	private JPanel outputSideView;
+	private JPanel outputAnimation;
 	// canvases
 	private Canvas canvasTopView;
+	private Canvas canvasSideView;
+	private Canvas canvasAnimation;
 	
 	// vars for calculated orbits (used to calculate rendering) (inputs to this class)
 			private double r;
@@ -38,8 +41,8 @@ public class OutputPanel extends JPanel {
 			private double I_epsilon;
 			private double I_i;
 			
-			private Shape earth;
-			private Shape orbit;
+			private Shape _planet;
+			private Shape _orbit;
 	
 	public OutputPanel() {
 		setLayout(new MigLayout("", "[133.00px][195.00,center][152.00]", "[][264.00px][][]"));
@@ -49,39 +52,40 @@ public class OutputPanel extends JPanel {
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		add(tabbedPane, "cell 0 1 3 1,alignx left,aligny top,grow");
+		add(tabbedPane, "cell 0 1 6 6,alignx left,aligny top,grow");
 		
-		JPanel outputTopView = new JPanel();
+		outputTopView = new JPanel();
+		outputTopView.setBounds(0, 0, 310, 210);
 		outputTopView.setBackground(Color.WHITE);
+		outputTopView.setBorder(null);
 		tabbedPane.addTab("Image Top view", null, outputTopView, null);
-		outputTopView.setLayout(new MigLayout("", "[388.00]", "[180.00]"));
+		outputTopView.setLayout(new MigLayout("", "[433.00]", "[232.00,bottom]"));
 		
-		Canvas canvasTopView = new CanvasTopView();
+		canvasTopView = new CanvasTopView();
+		canvasTopView.setBounds(0, 0, 300, 200);
 		canvasTopView.setVisible(false);
-		canvasTopView.setBackground(Color.WHITE);
-		outputTopView.add(canvasTopView, "cell 0 0,grow");
+		canvasTopView.setBackground(Color.decode("#E6E6E6"));
+		outputTopView.add(canvasTopView, "cell 0 0,aligny center,grow");
 		
-		JPanel outputSideView = new JPanel();
+		outputSideView = new JPanel();
 		outputSideView.setBackground(Color.WHITE);
 		tabbedPane.addTab("Image Side View", null, outputSideView, null);
-		outputSideView.setLayout(new MigLayout("", "[414.00]", "[220.00]"));
+		outputSideView.setLayout(new MigLayout("", "[414.00]", "[:236.00:239.00,bottom]"));
 		
-		Canvas canvasSideView = new Canvas();
+		canvasSideView = new Canvas();
 		canvasSideView.setBackground(Color.WHITE);
-		outputSideView.add(canvasSideView, "cell 0 0,grow");
+		outputSideView.add(canvasSideView, "cell 0 0,aligny center,grow");
 		
-		JPanel outputAnimation = new JPanel();
+		outputAnimation = new JPanel();
 		outputAnimation.setBackground(Color.WHITE);
 		tabbedPane.addTab("2D Animation (Top View)", null, outputAnimation, null);
-		outputAnimation.setLayout(new MigLayout("", "[418.00]", "[227.00]"));
+		outputAnimation.setLayout(new MigLayout("", "[418.00]", "[236.00]"));
 		
-		Canvas canvas = new Canvas();
-		canvas.setBackground(Color.WHITE);
-		outputAnimation.add(canvas, "cell 0 0,grow");
+		canvasAnimation = new Canvas();
+		canvasAnimation.setBackground(Color.WHITE);
+		outputAnimation.add(canvasAnimation, "cell 0 0,aligny center,grow");
 		
-		/*
-		 * The layered Jpanel would seem to be the way to have toggle views in the output I toggle orbit track or equatorial plane
-		 * */
+		
 		
 		
 	}
@@ -95,18 +99,8 @@ public class OutputPanel extends JPanel {
 		this.epsilon = epsilon;
 		this.i = i;
 		this.renderScale = renderScale;
-		// call appropriate 
-		if(renderScale.toLowerCase() == "illustrative")
-		{
-			calculateValuesForRealViewOnCanvasUsingCircularInputs();
-		}
-		else if(renderScale.toLowerCase() == "accurate")
-		{
-			calculateValuesForIllustrativeViewOnCanvasUsingCircularInputs();
-		}
-		
-		//drawCanvasTopView(); // send vals for illustrative and real view 
-		//drawCanvasSideView();  // send vals for illustrative and real view
+		System.out.println("in drawNewGraphics() and call calculateSetRenderCircularOrbitParams();");
+		calculateSetRenderCircularOrbitParams();
 		
 	}
 	
@@ -116,15 +110,45 @@ public class OutputPanel extends JPanel {
 		
 	}
 	
-	private void calculateValuesForRealViewOnCanvasUsingCircularInputs()
+	private void calculateSetRenderCircularOrbitParams() {
+		
+		// set planet colour
+			// CanvasTopView class is current getting it straight from OrbitMainFrame class - this needs to change!
+		// planet Diameter 
+		System.out.println("in calculateSetRenderCircularOrbitParams()");
+		
+		
+		// set canvas vals as appropriate 
+				if(renderScale.toLowerCase() == "illustrative")
+				{
+					System.out.println("in the if to select illustrative and call setIllustrativeCircularParams()");
+					((CanvasTopView) canvasTopView).setIllustrativeCircularParams(/*_planetColour,*/ r, v, 388, 200);
+					canvasTopView.setVisible(true);
+					System.out.println("call reRender()");
+					((CanvasTopView) canvasTopView).reRender();
+					canvasTopView.setVisible(true);
+				}
+				else if(renderScale.toLowerCase() == "accurate")
+				{
+					calculateValuesForRealViewOnCanvasUsingCircularInputs();
+				}
+				
+	}
+	
+	private void calculateValuesForIllustrativeViewOnCanvasUsingCircularInputs() // pass top side and animation params
+	{
+		// planet diameter 
+		
+		
+	}
+	
+	private void calculateValuesForRealViewOnCanvasUsingCircularInputs() // pass top side and animation params
 	{
 		
 		// planet 
 			// set color 
-			 // height 
-			// width
-			// x position
-			// y position
+			// set orbit height and width
+			// set x, y position
 		
 		// orbit 
 			// height 
@@ -133,22 +157,19 @@ public class OutputPanel extends JPanel {
 			// y position
 		
 		
-		((CanvasTopView) canvasTopView).setCircularParameters(/* add the appropriate args*/);
+	//	((CanvasTopView) canvasTopView).setCircularParameters(/* add the appropriate args*/);
 		
 		
 		//CanvasTopView.paint();
-		System.out.println("after paint()");
+	//	System.out.println("after paint()");
 		
-		canvasTopView.setVisible(true);
+		
 		
 
 		// NB nothing to calculate just pass the values on so they can be displayed. because its illustrative there is no need for scale 
 		// so a default layout is possible. The purpose of this is to make sure I can do it properly without worrying about calculations
 		// but also the argument is its a good teaching aid. This becomes useless if more than one orbit is on view at once!!!!
 	}
-	private void calculateValuesForIllustrativeViewOnCanvasUsingCircularInputs()
-	{
-		
-	}
+	
 
 }
