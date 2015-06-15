@@ -48,7 +48,8 @@ public class OrbitMainFrame extends JFrame {
 	private JPanel ellipticalPanel;
 	//toolbar
 		// params
-		public static String orbitingBody;
+		public static String orbitingBody = "null";
+		public static String manoeuvreType = "null";
 		public static HashMap<String, Double> orbitingBodyData;
 		// Parameterized components for comboboxes stored in respecive arraylists 
 			// OrbitTypes  
@@ -98,30 +99,64 @@ public class OrbitMainFrame extends JFrame {
 				public void actionPerformed(ActionEvent e)
 				{
 					JComboBox clicked = (JComboBox)e.getSource();
+					
 					if(clicked == comboBoxOrbitType)
 					{
 						System.out.println("combobox orbitType has been selected");
 						inputPanelChanger(comboBoxOrbitType.getSelectedItem().toString());
+						
 					}
 					else if (clicked == comboBoxOrbitingBody)
 					{
-						if (comboBoxOrbitingBody.getSelectedItem().toString() == "Select Orbiting Body")
-						{
-							setOrbitingBody(null);
+						System.out.println("comboBoxOrbitingBody selected");
+						System.out.println("...and the following was selected: " + comboBoxOrbitingBody.getSelectedItem().toString());
+						switch(comboBoxOrbitingBody.getSelectedItem().toString()) {
+						case "Select Orbiting Body":
+							System.out.println("it did!");
+							setOrbitingBody("null");
 							orbitingBodyData = null;
+							break;
+						default:
+							setOrbitingBody(comboBoxOrbitingBody.getSelectedItem().toString());
+							SolarSystemDatabase ObjectSelectedToOrbit = new SolarSystemDatabase();
+							if(orbitingBody != "null") {
+								orbitingBodyData = ObjectSelectedToOrbit.getSolarSystemObjectInformation(orbitingBody.toLowerCase());
+							}
+							break;
 						}
-						else
-						{
-						System.out.println(comboBoxOrbitingBody.getSelectedItem().toString());
-						setOrbitingBody(comboBoxOrbitingBody.getSelectedItem().toString());
-						SolarSystemDatabase ObjectSelectedToOrbit = new SolarSystemDatabase();
-						orbitingBodyData = ObjectSelectedToOrbit.getSolarSystemObjectInformation(orbitingBody.toLowerCase());
-						System.out.println("");
-						}
+//						if (comboBoxOrbitingBody.getSelectedItem().toString() == "Select Orbiting Body")
+//						{
+//							System.out.println("it did!");
+//							setOrbitingBody("null");
+//							orbitingBodyData = null;
+//						}
+//						else
+//						{
+//						setOrbitingBody(comboBoxOrbitingBody.getSelectedItem().toString());
+//						SolarSystemDatabase ObjectSelectedToOrbit = new SolarSystemDatabase();
+//							if(orbitingBody != "null") {
+//							orbitingBodyData = ObjectSelectedToOrbit.getSolarSystemObjectInformation(orbitingBody.toLowerCase());
+//							}						
+//						}
 					}
 					else if (clicked == comboBoxManoeuvreType) // It will probably be best to make this its own card panel with a default when not needed and then a different layout for the other choices. 
-					{
-						System.out.println("selected Manoeuvre");
+					{ // THE IF WONT WORK
+						System.out.println("manoeuvre clicked");
+						System.out.println(comboBoxManoeuvreType.getSelectedItem().toString());
+						switch(comboBoxManoeuvreType.getSelectedItem().toString()) {
+						case "Select Manoeuvre":
+							System.out.println("select manoeuvre selected");
+							manoeuvreType = "null";
+							break;
+						case "Orbit":
+							System.out.println("Orbit selected");
+							manoeuvreType = comboBoxManoeuvreType.getSelectedItem().toString();
+							break;
+						case "Hohmann Transfer":
+							System.out.println("hohmann transfer");
+							JOptionPane.showMessageDialog(null, "This Manoeuvre option is currently unavailable");
+							break;
+						}
 					}
 					else
 					{
@@ -226,8 +261,8 @@ public class OrbitMainFrame extends JFrame {
 			((CircularOrbitInputs) circularPanel).setNewGraphics(new MainFrameListener(/*r, v, T, epsilon, i*/) {
 				//@Override
 				public void setNewGraphics(double r, double v, double T,
-						double epsilon, double i, String renderScale) {
-					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(r,v,T,epsilon,i, renderScale);
+						double epsilon, String renderScale, double i) {
+					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(r,v,T,epsilon, renderScale,i);
 				}
 				
 			});
@@ -237,7 +272,7 @@ public class OrbitMainFrame extends JFrame {
 	protected void inputPanelChanger(String newParam) {
 		switch(newParam)
 		{
-		case "Selected Type":
+		case "Select Type":
 			newScenario();
 			break;
 		case "Circular":
@@ -249,11 +284,19 @@ public class OrbitMainFrame extends JFrame {
 			ellipticalPanel.setVisible(true);
 			defaultInputPanel.setVisible(false);
 			circularPanel.setVisible(false);
+			JOptionPane.showMessageDialog(null, "The functionality for this Orbit type has not yet been developed, please select another.");
+			break;
+		case "Hyperbolic":
+			ellipticalPanel.setVisible(false);
+			defaultInputPanel.setVisible(true);
+			circularPanel.setVisible(false);
+			JOptionPane.showMessageDialog(null, "Nothing has yet been implemented for this orbit type please select another.");
 			break;
 		default :
 			// error message
 			break;
 		}
+		
 		
 	}
 	public void setOrbitingBody(String orbiting)
@@ -276,8 +319,11 @@ public class OrbitMainFrame extends JFrame {
 		case "elliptical":
 			EllipticalOrbitInputs.resetEllipticalPanle();
 			break;
+		case "Hyperbolic":
+			// HyperbolicOrbitInputs.resetHyperbolicPanel();
 		}
 		// reset output panel
+		// reset input panel
 		defaultInputPanel.setVisible(true);
 		circularPanel.setVisible(false);
 		ellipticalPanel.setVisible(false);
@@ -288,7 +334,8 @@ public class OrbitMainFrame extends JFrame {
 		// manoeuvre combo back to default 
 		comboBoxManoeuvreType.setSelectedIndex(0);
 		// reset parameters
-		setOrbitingBody(null);
+		setOrbitingBody("null");
+		manoeuvreType = "null";
 		orbitingBodyData = null;
 	}
 

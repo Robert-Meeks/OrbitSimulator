@@ -21,6 +21,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 	private static JTextField tfVelocity;
 	private static JTextField tfSpecificMechanicalEnergy;
 	private static JTextField tfPeriod;
+	private JTextField tfInclination;
 	private JRadioButton rdbtnIllustrative;
 	private JRadioButton rdbtnAccurate;
 	private JButton btnCalculateOrbit;
@@ -39,21 +40,26 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 	
 	// error params
 	private int anErrorOccured;
+	private String errorMessage = "null";
 	private ArrayList<String> ERROR_OCCURED_CalculatingCircularOrbitMethod;
 	private String orbitingBodyIsNullMessage = "- An Orbiting Body has not been selected\n";
 	private String unselectedInputVar = "- Please select the Input you would like to diffine for\n  this scenario in the dropdown menu (r,v,epsilon,T)\n";
-	private String specificError_orbitRadiusIsTooSmall = "- The Orbit radius is Too small.\n";
+	private String manouevreIsNullMessage = "- Plaese select a manoeuvre type.";
+	private String specificError_orbitRadiusIsTooSmall = "- The Orbit radius is inside the chossen planet, make it bigger.\n";
 	private String specificError_orbitRadiusIsTooLarge = "- The Orbit radius is out side the Orbiting\n  Bodies Sphere of Influence, please reduce Radius.\n";
+	private String specificError_InclinationOutsideOfExceptableRange = "- The orbit Inclination is outside of the exceptable range. Exceptible range: 0 <= i <=180\n";
 	// warning params
 	private int warningOccured;
+	private String warningMessage = "null";
 	private ArrayList<String> WARNING_OCCURED_CalculatingCircularOrbitMethod;
-	private String specificWarning_radiusInsideAtmosphere = "- The orbit radius low enough to be effected by the atmosphere.\n";
+	private String specificWarning_radiusInsideAtmosphere = "- The orbit radius is small enough for the atmosphere to have a massive drag effect on the satellite.\n";
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	
 	
 	CircularOrbitInputs()
 	{
 		
-		setLayout(new MigLayout("", "[][17.00][][106.00,grow][grow][]", "[][][][][][][][][][][][]"));
+		setLayout(new MigLayout("", "[][17.00][][106.00,grow][grow][]", "[][][][][][][][][][][][][]"));
 		
 		JLabel lblCircularPanelHeader = new JLabel("Circular Orbit Inputs");
 		lblCircularPanelHeader.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -110,7 +116,6 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 				}
 			}
 		});
-		
 		
 		JLabel lblRadius = new JLabel("Radius");
 		lblRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -177,24 +182,33 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		
 		btnCalculateOrbit = new JButton("Calculate Orbit");
 		btnCalculateOrbit.addActionListener(this);
-	
-		
+			
+		JLabel lblInclination = new JLabel("Inclination");
+		lblInclination.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblInclination, "cell 2 8,alignx left");
+
+		tfInclination = new JTextField();
+		tfInclination.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfInclination, "cell 3 8,growx,aligny top");
+		tfInclination.setColumns(10);
+
+
 		JLabel lblSelectDesiredScale = new JLabel("Select Desired Scale");
 		lblSelectDesiredScale.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblSelectDesiredScale, "cell 2 8");
+		add(lblSelectDesiredScale, "cell 2 9");
 		
 		rdbtnIllustrative = new JRadioButton("Illustrative");
 		buttonGroup.add(rdbtnIllustrative);
 		rdbtnIllustrative.setSelected(true);
 		rdbtnIllustrative.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(rdbtnIllustrative, "cell 3 8");
+		add(rdbtnIllustrative, "cell 3 9");
 		
 		rdbtnAccurate = new JRadioButton("Accurate");
 		buttonGroup.add(rdbtnAccurate);
 		rdbtnAccurate.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(rdbtnAccurate, "cell 3 9");
-		add(btnCalculateOrbit, "cell 3 10");
-		add(btnChangeInputVariable, "cell 3 11");
+		add(rdbtnAccurate, "cell 3 10");
+		add(btnCalculateOrbit, "cell 3 11");
+		add(btnChangeInputVariable, "cell 3 12");
 		
 		
 	} //END CONSTRUCTOR
@@ -210,22 +224,27 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		
 			// check a planet has been selected
 			getScaleForRendering(); // not in the check Inputs because been designed that one has to be always selected
+			try {
 			CheckInputsBeforeCalculation(); // error methods are at the bottom of this class
-			if(anErrorOccured > 0)
-			{
-				JOptionPane.showMessageDialog(null, WARNING_OCCURED_CalculatingCircularOrbitMethod);
+			
+			} catch(NumberFormatException exception) {
+				JOptionPane.showMessageDialog(null, "1 or more inputs are invalid.");
 			}
-			else
-			{
-				CalculateCircularOrbit();
-				System.out.println("call newGraphicsListener");
-				newGraphicsListener.setNewGraphics(Double.parseDouble(tfRadius.getText()),
-						Double.parseDouble(tfVelocity.getText()), 
-						Double.parseDouble(tfPeriod.getText()), 
-						Double.parseDouble(tfSpecificMechanicalEnergy.getText()),
-						0.0 /*i hard coded for now*/,
-						renderScale);
+			System.out.println("anErrorOccured just before CalculateCircularOrbit = " + anErrorOccured);
+			int errors = warningOccured + anErrorOccured;
+			switch(errors) {
+			case 0:
+				//try {
+					CalculateCircularOrbit();
+				//}
+				//catch (NumberFormatException exception) {
+					JOptionPane.showMessageDialog(null, "The input has characters, please make sure the input is a number.");
+				//}
+				break;
+			default:
+				break;
 			}
+
 		
 	}
 	
@@ -247,11 +266,14 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		System.out.println("CalculateCircularOrbit() has been entered");
 		// if tfRadius isnt null then it is populated, if it is populated then the user has selected this var as the input and we want to call
 		// the method that can calculate all the other parameters using the input.
+		if(selectedInputVariable == null) {
+			selectedInputVariable = "null";
+		}
 		switch(selectedInputVariable)
 		{
-		//case "Variable":
-			// I dont think it possible to get this far and to have not selected one of the others but just incase I put this in. 
-			//System.out.println("turns out I do need error checking at CircularOrbitInput.CalculateCircularOrbit() in the switch first case 'Variable'.");
+		case "null":
+			JOptionPane.showMessageDialog(null, "Please select an input variable.");
+			break;
 		case "Radius":
 			System.out.println("the switch to recognise which input has been selected works");
 			CalculateOrbitWithRadius(tfRadius.getText());
@@ -266,6 +288,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 			CalculateOrbitWithPeriod(tfPeriod.getText());
 			break;
 		}
+		selectedInputVariable = null;
 	}
 	
 	private void CalculateOrbitWithRadius(String radius) {
@@ -346,22 +369,44 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 	private void CheckInputsBeforeCalculation() {
 		anErrorOccured = 0;
 		warningOccured = 0;
+		errorMessage = "";
+		warningMessage = "";
 		ERROR_OCCURED_CalculatingCircularOrbitMethod = new ArrayList<String>();
 		WARNING_OCCURED_CalculatingCircularOrbitMethod = new ArrayList<String>();
+		ERROR_OCCURED_CalculatingCircularOrbitMethod.clear();
+		ERROR_OCCURED_CalculatingCircularOrbitMethod.add(0, "The following Errors occured:\n\n");
+		WARNING_OCCURED_CalculatingCircularOrbitMethod.add(0, "Please note the following warnings:\n\n");
 		
-		ERROR_OCCURED_CalculatingCircularOrbitMethod.add("The following Errors occured:\n\n");
-		WARNING_OCCURED_CalculatingCircularOrbitMethod.add("Please note the following warnings:\n\n");
-		
-		if (OrbitMainFrame.orbitingBody == null)
+		// Toolbar inputs
+		if (OrbitMainFrame.orbitingBody == "null")
 		{
 			anErrorOccured = anErrorOccured + 1;
 			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(orbitingBodyIsNullMessage); 
 		}
-		if (tfRadius.getText() == null 
-				&& tfVelocity.getText() == null 
-				&& tfSpecificMechanicalEnergy.getText() == null 
-				&& tfPeriod.getText() == null)
-		{ 
+		
+		if (OrbitMainFrame.manoeuvreType == "null") {
+			anErrorOccured = anErrorOccured + 1;
+			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(manouevreIsNullMessage);
+		}
+		//  if no input is entered
+		if (tfRadius.getText() == null && selectedInputVariable != comboBoxCircularInputs.getSelectedItem()) {
+			anErrorOccured = anErrorOccured + 1;
+			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(unselectedInputVar);
+		}
+		if (tfVelocity.getText() == null && selectedInputVariable != comboBoxCircularInputs.getSelectedItem()) {
+			anErrorOccured = anErrorOccured + 1;
+			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(unselectedInputVar);
+		}
+		if (tfSpecificMechanicalEnergy.getText() == null && selectedInputVariable != comboBoxCircularInputs.getSelectedItem()) {
+			anErrorOccured = anErrorOccured + 1;
+			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(unselectedInputVar);
+		}
+		if (tfPeriod.getText() == null && selectedInputVariable != comboBoxCircularInputs.getSelectedItem()) {
+			anErrorOccured = anErrorOccured + 1;
+			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(unselectedInputVar);
+		}
+		System.out.println(tfInclination.getText());
+		if (tfInclination.getText() == null) {
 			anErrorOccured = anErrorOccured + 1;
 			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(unselectedInputVar);
 		}
@@ -369,7 +414,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		if (selectedInputVariable == "Radius")
 		{
 			double checkRadius = Double.parseDouble(tfRadius.getText());
-			// if radius of orbit is too small	
+			
 			if(checkRadius < OrbitMainFrame.getOrbitingBodyData("radius"))
 			{
 				anErrorOccured = anErrorOccured + 1;
@@ -382,25 +427,31 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 				ERROR_OCCURED_CalculatingCircularOrbitMethod.add(specificError_orbitRadiusIsTooLarge);
 			}
 				// radius of the orbit is inside atmosphere
-			if(checkRadius < OrbitMainFrame.getOrbitingBodyData("atmosphereRadius"))
+			if(checkRadius > OrbitMainFrame.getOrbitingBodyData("radius") && checkRadius < OrbitMainFrame.getOrbitingBodyData("atmosphereRadius"))
 			{
 				warningOccured = warningOccured + 1;
 				WARNING_OCCURED_CalculatingCircularOrbitMethod.add(specificWarning_radiusInsideAtmosphere);
 			}
 		}
-		// issue error if there is an error, if not then issue a warning otherwise run calculation. 
-		// 
-		String warningMessage = null;
-		if(warningOccured > 0)
+		if(Double.parseDouble(tfInclination.getText()) < 0 || Double.parseDouble(tfInclination.getText()) > 180) {
+			anErrorOccured = anErrorOccured + 1;
+			ERROR_OCCURED_CalculatingCircularOrbitMethod.add(specificError_InclinationOutsideOfExceptableRange);
+		}
+//		
+		System.out.println("error occured = " + anErrorOccured);
+		// ERROR MESSAGE
+		if(anErrorOccured > 0) {
+			for(String i : ERROR_OCCURED_CalculatingCircularOrbitMethod) {
+				errorMessage = errorMessage + i;
+			}
+			JOptionPane.showMessageDialog(null, errorMessage + "\n-----------------------------------\n Please make these corrections to procede.");
+		} else {
+			anErrorOccured = 0;
+		}
+		
+		// WARNING MESSAGE
+		if(warningOccured > 0 && anErrorOccured == 0)
 		{
-			
-				//---HERE
-					// need to make the string up for all messages that have been issued. I think this means getting size of arraylist 
-				    // then make a String = arraylist[0] + arraylist[1] + arraylist[2] etc depending on num of errors/size of arraylist.
-					// this String is then the arguement that goes in the JOptionPane ###NB### need to have a string at the end reminding 
-					// user that after fixing the problem will have to reclick calculate button ALSO if they choose to ignore warning then 
-					// they are stuck in a loop because it will keep issuing the warning so on the warning window there needs to be an yes/
-					// no option so it calls the calulate method from there.
 			
 			String[] message = new String[WARNING_OCCURED_CalculatingCircularOrbitMethod.size()];
 			WARNING_OCCURED_CalculatingCircularOrbitMethod.toArray(message);
@@ -411,13 +462,16 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 				warningMessage = warningMessage + i; //message[i];
 			}
 			
-			int reply = JOptionPane.showConfirmDialog(null, warningMessage + "\n-----------------------------------\n If you choose to correct the above, click Cancel and when changes\n have been made reselect the calculate button.\n To continue any way click on OK", null, JOptionPane.OK_CANCEL_OPTION);
-			if (reply == JOptionPane.OK_OPTION)
-			{// method to reset scenario
-				CalculateCircularOrbit();
+			int reply = JOptionPane.showConfirmDialog(null, warningMessage + "\n-----------------------------------\n If you choose to correct the above, click Cancel and when changes\n have been made reselect the calculate button.\n To ignore warnings click on OK", null, JOptionPane.OK_CANCEL_OPTION);
+			if (reply == JOptionPane.OK_OPTION) {// method to reset scenario
+				warningOccured = 0;
 			}
-			
+			else if (reply == JOptionPane.CANCEL_OPTION) {
+				
+			}
 		}
+		
+		
 	}
 
 

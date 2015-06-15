@@ -53,10 +53,6 @@ public class CanvasTopView extends Canvas {
 	Point startDrag, endDrag;
 	Shape found = null;
 	
-	public CanvasTopView() {
-
-		
-	}
 
 	public void paint(Graphics g)
 	{
@@ -76,39 +72,18 @@ public class CanvasTopView extends Canvas {
 			g2.setRenderingHint(
 					RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
-
-			
-			// velocity
-			g2.setPaint(Color.BLUE);
-			g2.setFont(new Font("Arial", Font.PLAIN, 10));
-			// draw velocity label
-			g2.drawString(_lblV + ((Double)_orbitV).toString() + " Km/s", (int)_lblVx, (int)_lblVy);
-			// draw radius label
-			g2.drawString(_lblR + ((Double)_orbitR).toString() + " Km", (int)_lblRx, (int)_lblRy);
-			// draw velocity arrow
-			for(Shape v : _velocityArrow) {
-				g2.draw(v);
-			}
-			// draw radius arrow
-			for(Shape r : _radiusArrow) {
-				g2.draw(r);
-			}
 			
 			// draw planet
 			_planet = new Ellipse2D.Double(_planetPositionX, _planetPositionY, _planetDiameter, _planetDiameter); // args - (x, y, w, h)
 			
-			System.out.println("planet");
 			g2.setStroke(new BasicStroke((float) 0.8));
-			System.out.println("planet1");
-			g2.fill(_planet);
-			System.out.println("planet2");
 			
 			switch(_orbitingPlanet) {
 				case "earth":
-					g2.setPaint(Color.BLUE);
+					g2.setPaint(Color.decode("#848BFF"));
 					break;
 				case "mars":
-					g2.setPaint(Color.ORANGE);
+					g2.setPaint(Color.decode("#FF7878"));
 					break;
 				case "moon": 
 					g2.setPaint(Color.GRAY);
@@ -118,8 +93,7 @@ public class CanvasTopView extends Canvas {
 					g2.setPaint(Color.BLACK);
 					break;
 			}
-			
-			System.out.println("before draw planet");
+			g2.fill(_planet);
 			g2.draw(_planet);
 
 			// draw orbit track
@@ -136,6 +110,24 @@ public class CanvasTopView extends Canvas {
 			g2.draw(_orbit);
 			System.out.println("after draw orbit");
 			
+			// velocity
+			g2.setPaint(Color.GREEN);
+			g2.setFont(new Font("Arial", Font.PLAIN, 10));
+			// draw velocity label
+			g2.drawString(_lblV + ((Double)_orbitV).toString() + " Km/s", (int)_lblVx, (int)_lblVy);
+			// draw velocity arrow
+			for(Shape v : _velocityArrow) {
+				g2.draw(v);
+			}
+			// draw radius label
+			g2.setPaint(Color.RED);
+			g2.drawString(_lblR + ((Double)_orbitR).toString() + " Km", (int)_lblRx, (int)_lblRy);
+
+			// draw radius arrow
+			for(Shape r : _radiusArrow) {
+				g2.draw(r);
+			}
+			
 	}
 	
 	public void reRender() {
@@ -143,7 +135,7 @@ public class CanvasTopView extends Canvas {
 			repaint();
 	}
 	
-	public static void setIllustrativeCircularParams(/*String planetColour,*/ double radius, double velocity, int canvasW, int canvasH) {
+	public static void setIllustrativeTopViewParams(/*String planetColour,*/ double radius, double velocity, int canvasW, int canvasH) {
 		System.out.println("in setIllustrativeCircularParams()");
 		_orbitR = radius;
 		_orbitV = velocity;
@@ -195,30 +187,30 @@ public class CanvasTopView extends Canvas {
 		Shape r;
 		// main part of arrow
 				r = new Line2D.Double((_canvasW/2), (_canvasH/2), ((_canvasW/2) + ((_orbitHeight / 2) * 0.707)), ((_canvasH/2) + ((_orbitWidth / 2) * 0.707)));
-				_velocityArrow.add(r);
+				_radiusArrow.add(r);
 				// left bit
 				r = new Line2D.Double(((_canvasW/2) + ((_orbitHeight / 2) * 0.707)), ((_canvasH/2) + ((_orbitWidth / 2) * 0.707)), ((_canvasW/2) + ((_orbitHeight / 2) * 0.707)), (int)((_canvasH/2) + ((_orbitWidth / 2) * 0.707) - 10));
-				_velocityArrow.add(r);
+				_radiusArrow.add(r);
 				// right bit 
 				r = new Line2D.Double((_canvasW/2) + ((_orbitHeight / 2) * 0.707), ((_canvasH/2) + ((_orbitWidth / 2) * 0.707)), ((_canvasW/2) + ((_orbitHeight / 2) * 0.707) - 10), ((_canvasH/2) + ((_orbitWidth / 2) * 0.707)));
-				_velocityArrow.add(r);
+				_radiusArrow.add(r);
 	}
 
 
 	private void calcPositionOfVectorV() {
 		Shape v;
 		// vector origin
-		v = new Ellipse2D.Double((_canvasW/2), (_canvasH/2), 4, 4);
+		v = new Ellipse2D.Double((_canvasW/2) + (_orbitWidth/2) - 1, (_canvasH/2), 2, 2);
 		_velocityArrow.add(v);
 		// main part of arrow
 		v = new Line2D.Double((_canvasW/2) + (_orbitWidth/2), (_canvasH/2), (_canvasW/2) + (_orbitWidth/2), (_canvasH/2)-50);
-		_radiusArrow.add(v);
+		_velocityArrow.add(v);
 		// left bit
 		v = new Line2D.Double((_canvasW/2) + (_orbitWidth/2), (_canvasH/2)-50, (_canvasW/2) + (_orbitWidth/2)-7, (_canvasH/2)-43);
-		_radiusArrow.add(v);
+		_velocityArrow.add(v);
 		// right bit 
 		v = new Line2D.Double((_canvasW/2) + (_orbitWidth/2), (_canvasH/2)-50, (_canvasW/2) + (_orbitWidth/2)+7, (_canvasH/2)-43);
-		_radiusArrow.add(v);
+		_velocityArrow.add(v);
 	}
 
 	

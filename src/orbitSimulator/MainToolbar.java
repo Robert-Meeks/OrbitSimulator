@@ -166,30 +166,37 @@ public class MainToolbar extends JPanel implements MainFrameListener {
 	}
 	
 	protected void inputPanelChanger(String newParam) {
-		switch(newParam)
-		{
-		case "Selected Type":
-			// error message 
-			break;
-		case "Circular":
-			circularPanel.setVisible(true);
-			ellipticalPanel.setVisible(false);
-			break;
-		case "Elliptical":
-			ellipticalPanel.setVisible(true);
-			circularPanel.setVisible(false);
-			break;
-		default :
-			// error message
-			break;
-		}
+//		switch(newParam)
+//		{
+//		case "Selected Type":
+//			// error message 
+//			break;
+//		case "Circular":
+//			circularPanel.setVisible(true);
+//			ellipticalPanel.setVisible(false);
+//			break;
+//		case "Elliptical":
+//			ellipticalPanel.setVisible(true);
+//			circularPanel.setVisible(false);
+//			break;
+//		default :
+//			// error message
+//			break;
+//		}
 		
 	}
 
 	@Override
-	public void setNewGraphics() {
+	public void setNewGraphics(double r, double v, double T, double epsilon,
+			String renderScale, double i) {
 		// TODO Auto-generated method stub
 		
 	}
+
+//	@Override
+//	public void setNewGraphics() {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }

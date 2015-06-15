@@ -64,7 +64,7 @@ public class OutputPanel extends JPanel {
 		canvasTopView = new CanvasTopView();
 		canvasTopView.setBounds(0, 0, 300, 200);
 		canvasTopView.setVisible(false);
-		canvasTopView.setBackground(Color.decode("#E6E6E6"));
+		canvasTopView.setBackground(Color.decode("#FFFFFF"));
 		outputTopView.add(canvasTopView, "cell 0 0,aligny center,grow");
 		
 		outputSideView = new JPanel();
@@ -72,8 +72,9 @@ public class OutputPanel extends JPanel {
 		tabbedPane.addTab("Image Side View", null, outputSideView, null);
 		outputSideView.setLayout(new MigLayout("", "[414.00]", "[:236.00:239.00,bottom]"));
 		
-		canvasSideView = new Canvas();
+		canvasSideView = new CanvasSideView();
 		canvasSideView.setBackground(Color.WHITE);
+		canvasSideView.setVisible(false);
 		outputSideView.add(canvasSideView, "cell 0 0,aligny center,grow");
 		
 		outputAnimation = new JPanel();
@@ -81,7 +82,7 @@ public class OutputPanel extends JPanel {
 		tabbedPane.addTab("2D Animation (Top View)", null, outputAnimation, null);
 		outputAnimation.setLayout(new MigLayout("", "[418.00]", "[236.00]"));
 		
-		canvasAnimation = new Canvas();
+		canvasAnimation = new CanvasAnimation();
 		canvasAnimation.setBackground(Color.WHITE);
 		outputAnimation.add(canvasAnimation, "cell 0 0,aligny center,grow");
 		
@@ -90,7 +91,7 @@ public class OutputPanel extends JPanel {
 		
 	}
 	//from circular
-	public void drawNewGraphics(double r, double v, double T, double epsilon, double i, String renderScale)
+	public void drawNewGraphics(double r, double v, double T, double epsilon, String renderScale, double i)
 	{
 		// set vals
 		this.r = r;
@@ -121,16 +122,21 @@ public class OutputPanel extends JPanel {
 		// set canvas vals as appropriate 
 				if(renderScale.toLowerCase() == "illustrative")
 				{
+					//top view
 					System.out.println("in the if to select illustrative and call setIllustrativeCircularParams()");
-					((CanvasTopView) canvasTopView).setIllustrativeCircularParams(/*_planetColour,*/ r, v, 388, 200);
-					canvasTopView.setVisible(true);
+					((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ r, v, 388, 200);
 					System.out.println("call reRender()");
 					((CanvasTopView) canvasTopView).reRender();
 					canvasTopView.setVisible(true);
+					
+					//side view
+					((CanvasSideView) canvasSideView).setIllustrativeSideViewParams(i);
+					((CanvasSideView) canvasSideView).reRender();
+					canvasSideView.setVisible(true);
 				}
 				else if(renderScale.toLowerCase() == "accurate")
 				{
-					calculateValuesForRealViewOnCanvasUsingCircularInputs();
+					
 				}
 				
 	}
