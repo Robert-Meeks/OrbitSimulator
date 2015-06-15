@@ -25,6 +25,7 @@ import net.miginfocom.swing.MigLayout;
 	- error messages in:
 		-- inputPanelChanger() for to out comes of the switch within it.
 */	
+// added a comment to check I had set things up properly
 public class OrbitMainFrame extends JFrame {
 	
 	// FOR TESTING
