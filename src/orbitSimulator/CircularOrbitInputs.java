@@ -224,8 +224,8 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		
 			// check a planet has been selected
 			getScaleForRendering(); // not in the check Inputs because been designed that one has to be always selected
-			try {
-			CheckInputsBeforeCalculation(); // error methods are at the bottom of this class
+			/*try {
+				CheckInputsBeforeCalculation(); // error methods are at the bottom of this class
 			
 			} catch(NumberFormatException exception) {
 				JOptionPane.showMessageDialog(null, "1 or more inputs are invalid.");
@@ -234,17 +234,18 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 			int errors = warningOccured + anErrorOccured;
 			switch(errors) {
 			case 0:
-				//try {
+				try {
 					CalculateCircularOrbit();
-				//}
-				//catch (NumberFormatException exception) {
+				}
+				catch (NumberFormatException exception) {
 					JOptionPane.showMessageDialog(null, "The input has characters, please make sure the input is a number.");
-				//}
+				}
 				break;
 			default:
 				break;
-			}
-
+			}*/
+			CalculateCircularOrbit();
+			
 		
 	}
 	
