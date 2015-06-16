@@ -29,9 +29,15 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 	private MainFrameListener newGraphicsListener;
 	
 	private static JComboBox comboBoxCircularInputs;
-	// variables
+	
 	// general variables
 	private double pi = Math.PI;
+	// variables
+	private double r = 0;
+	private double v = 0; 
+	private double epsilon = 0; 
+	private double T = 0;
+	private double i = 0;
 	//vars that get set
 	//--- private static String orbitingBody; // holds the name of the planet the user has selected to orbit as a string
 	//---HashMap<String, Double> orbitingBodyData; // hold the data of the planet the user has chosen to orbit. 
@@ -245,8 +251,8 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 				break;
 			}*/
 			CalculateCircularOrbit();
-			
-		
+			i = Double.parseDouble(tfInclination.getText());
+			newGraphicsListener.setNewGraphics(r, v, T, epsilon, renderScale, i);
 	}
 	
 	private void getScaleForRendering() {
@@ -298,20 +304,24 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		double mu = OrbitMainFrame.getOrbitingBodyData("mu");
 		System.out.println("mu = " + mu);
 		// change input var from string to double
-		double r = Double.parseDouble(radius);
+		r = Double.parseDouble(radius);
+		
 		System.out.println("r = " + r);
 		// work out answers 
-		double v = Math.sqrt(mu/r);
+		v = Math.sqrt(mu/r);
 		System.out.println("v = " + v);
-		double epsilon = - mu/ (2 * r);
+		epsilon = - mu/ (2 * r);
 		System.out.println("epsilon = " + epsilon);
-		double T = 2 * pi * Math.sqrt(r*r*r / mu);
+		T = 2 * pi * Math.sqrt(r*r*r / mu);
 		System.out.println("T = " + T);
+		
 		// put answers in relevant textFields
 		tfVelocity.setText(String.format("%.5f", v));
 		System.out.println("v = " + v);
 		tfSpecificMechanicalEnergy.setText(String.format("%.5f", epsilon));
 		tfPeriod.setText(String.format("%.5f", T));
+		
+		
 	}
 	
 	private void CalculateOrbitWithVelocity(String velocity) {
@@ -320,9 +330,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		// change input var from string to double
 		double v = Double.parseDouble(velocity);
 		// work out answers
-		double r = mu / (v * v); 
-		double epsilon = - mu/ (2 * r);
-		double T = 2 * pi * Math.sqrt(r*r*r / mu);
+		r = mu / (v * v); 
+		epsilon = - mu/ (2 * r);
+		T = 2 * pi * Math.sqrt(r*r*r / mu);
 		// put answers in relevant text fields
 		tfRadius.setText(String.format("%.5f", r));
 		tfSpecificMechanicalEnergy.setText(String.format("%.5f", epsilon));
@@ -334,9 +344,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		// change input var from string to double
 		double epsilon = Double.parseDouble(SME);
 		// work out answers
-		double r = - mu / (2 * epsilon);
-		double v = Math.sqrt(mu/r);
-		double T = 2 * pi * Math.sqrt(r*r*r / mu);
+		r = - mu / (2 * epsilon);
+		v = Math.sqrt(mu/r);
+		T = 2 * pi * Math.sqrt(r*r*r / mu);
 		// put answers in relevant text fields
 		tfRadius.setText(String.format("%.5f", r));
 		tfVelocity.setText(String.format("%.5f", v));
@@ -349,9 +359,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		// change input var from string to double
 		double T = Double.parseDouble(period);
 		// work out answers
-		double r = Math.cbrt((Math.pow((T / (2*pi)), 2) * mu));
-		double v = Math.sqrt(mu/r);
-		double epsilon = - mu/ (2 * r);
+		r = Math.cbrt((Math.pow((T / (2*pi)), 2) * mu));
+		v = Math.sqrt(mu/r);
+		epsilon = - mu/ (2 * r);
 		// put answers in relevant text fields
 		tfRadius.setText(String.format("%.5f", r));
 		tfVelocity.setText(String.format("%.5f", v));

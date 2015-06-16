@@ -263,6 +263,7 @@ public class OrbitMainFrame extends JFrame {
 				//@Override
 				public void setNewGraphics(double r, double v, double T,
 						double epsilon, String renderScale, double i) {
+					System.out.println("blah blah blah");
 					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(r,v,T,epsilon, renderScale,i);
 				}
 				
