@@ -2,6 +2,10 @@ package orbitSimulator;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,16 +16,22 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 
 public class EllipticalOrbitInputs extends JPanel {
+	// in put text fields - NB put the name of any added tf's to the inputTextFields array at the bottom of this list as a string
 	private JTextField tfArgOfPeri;
 	private JTextField tfPeriapsis;
 	private JTextField tfApoapsis;
 	private JTextField tfSemimajorAxis;
 	private JTextField tfEccentricity;
 	private JTextField tfOrbitalPeriod;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField tfRAAN;
+	private JTextField tfPeriod;
+	// Array of input text fields
+	private static String[] inputTextFields = {"tfArgOfPeri", "tfPeriapsis", "tfApoapsis", 
+		"tfSemimajorAxis", "tfEccentricity", "tfOrbitalPeriod", "tfRAAN", "tfPeriod"};
+	private static final Map<String, Double> userInputs = new HashMap<String, Double>();
 	
 	private MainFrameListenerElliptical newGraphicsListener;
+	
 
 	EllipticalOrbitInputs()
 	{
@@ -93,19 +103,19 @@ public class EllipticalOrbitInputs extends JPanel {
 		lblRaan.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(lblRaan, "cell 1 9 2 1");
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(textField, "cell 3 9,growx");
-		textField.setColumns(10);
+		tfRAAN = new JTextField();
+		tfRAAN.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfRAAN, "cell 3 9,growx");
+		tfRAAN.setColumns(10);
 		
 		JLabel lblOrbitalPeriod = new JLabel("Orbital Period");
 		lblOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(lblOrbitalPeriod, "cell 1 10 2 1,alignx left");
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(textField_1, "cell 3 10,growx");
-		textField_1.setColumns(10);
+		tfPeriod = new JTextField();
+		tfPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfPeriod, "cell 3 10,growx");
+		tfPeriod.setColumns(10);
 		
 		JButton btnCalculateEllipticalOrbit = new JButton("Calculate Orbit");
 		add(btnCalculateEllipticalOrbit, "cell 3 11");
@@ -118,15 +128,15 @@ public class EllipticalOrbitInputs extends JPanel {
 			this.newGraphicsListener = listener;
 		}
 		
-		//@Override 
-					/* I'm not sure why this isnt required as it is in CircularOrbitInputs using the same architecture. 
+		/*@Override -  I'm not sure why this isnt required as it is in CircularOrbitInputs using the same architecture. 
 		               The only possibility I can think of is that circularPanel has a button which may mean that it needs 
-		               overriding .*/
+		               overriding.*/
+		//@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			getOrbitRenderScale();
+			System.out.println("in actionPerformed(ActionEvent e)");
+			//getOrbitRenderScale();
 			calculateEllipticalOrbit();
-			newGraphicsListener.setNewGraphics();
+			//newGraphicsListener.setNewGraphics();
 		}
 	
 		private void getOrbitRenderScale() {
@@ -135,16 +145,32 @@ public class EllipticalOrbitInputs extends JPanel {
 			}
 	
 		private void calculateEllipticalOrbit() {
-				// TODO Auto-generated method stub
+			System.out.println("in calculateEllipticalOrbit()");	
+			// get all the inputs and set them to private parameters 
+				getUserInputs();
+				// calculations (multiple methods)
+				// write calculated values to relevant text fields
 				
 			}
-	
-		public void setOrbitingBody()
-		{
+		
+		private void getUserInputs() {
+			System.out.println(" in getUserIputs()");
+			int count = inputTextFields.length;
+			for(int i = 0; i < count; i++){
+				String textFieldName = inputTextFields[i];
+				Object textField = textFieldName;
+				
+				if (((JTextField) textField).getText() != null || ((JTextField) textField).getText() == "") {
+					double textFieldValue = Double.parseDouble(((JTextField) textField).getText());
+					String paramName = textFieldName.substring(2);
+					
+					userInputs.put(paramName, textFieldValue);
+					System.out.println("item " + i + "entered into userInputs is: " + paramName + " = " + textFieldValue);
+				}
+			}
 			
 		}
-		
-	
+
 		public static void resetEllipticalPanel() {
 			// TODO Auto-generated method stub
 			

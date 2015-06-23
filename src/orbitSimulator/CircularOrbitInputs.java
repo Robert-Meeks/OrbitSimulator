@@ -230,6 +230,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		
 			// check a planet has been selected
 			getScaleForRendering(); // not in the check Inputs because been designed that one has to be always selected
+			
 			/*try {
 				CheckInputsBeforeCalculation(); // error methods are at the bottom of this class
 			
@@ -375,7 +376,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		tfSpecificMechanicalEnergy.setText("");
 		tfPeriod.setText("");
 	}
-	
+	//==============================================================================================================================
 	// Error handling
 	private void CheckInputsBeforeCalculation() {
 		anErrorOccured = 0;
