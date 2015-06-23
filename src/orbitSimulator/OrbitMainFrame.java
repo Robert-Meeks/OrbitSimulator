@@ -258,15 +258,22 @@ public class OrbitMainFrame extends JFrame {
 			getContentPane().add(outputPanel, "cell 3 1,grow");
 		
 			
-		// listener
+		// listeners
+			//circular
 			((CircularOrbitInputs) circularPanel).setNewGraphics(new MainFrameListener(/*r, v, T, epsilon, i*/) {
 				//@Override
 				public void setNewGraphics(double r, double v, double T,
 						double epsilon, String renderScale, double i) {
-					System.out.println("blah blah blah");
 					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(r,v,T,epsilon, renderScale,i);
 				}
 				
+			});
+			// elliptical
+			((EllipticalOrbitInputs) ellipticalPanel).setNewGraphics(new MainFrameListenerElliptical() {
+				//@Override
+				public void setNewGraphics() {
+					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics();
+				}
 			});
 	
 	} // END CONSTRUCTOR
@@ -286,7 +293,7 @@ public class OrbitMainFrame extends JFrame {
 			ellipticalPanel.setVisible(true);
 			defaultInputPanel.setVisible(false);
 			circularPanel.setVisible(false);
-			JOptionPane.showMessageDialog(null, "The functionality for this Orbit type has not yet been developed, please select another.");
+			//JOptionPane.showMessageDialog(null, "The functionality for this Orbit type has not yet been developed, please select another.");
 			break;
 		case "Hyperbolic":
 			ellipticalPanel.setVisible(false);
@@ -319,7 +326,7 @@ public class OrbitMainFrame extends JFrame {
 			CircularOrbitInputs.resetCircularPanel();
 			break;
 		case "elliptical":
-			EllipticalOrbitInputs.resetEllipticalPanle();
+			EllipticalOrbitInputs.resetEllipticalPanel();
 			break;
 		case "Hyperbolic":
 			// HyperbolicOrbitInputs.resetHyperbolicPanel();

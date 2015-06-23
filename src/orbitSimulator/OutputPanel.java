@@ -89,7 +89,8 @@ public class OutputPanel extends JPanel {
 		
 		
 		
-	}
+	} // END CONSTRUCTOR
+	//==============================================================================================================================
 	//from circular
 	public void drawNewGraphics(double r, double v, double T, double epsilon, String renderScale, double i)
 	{
@@ -105,11 +106,7 @@ public class OutputPanel extends JPanel {
 		
 	}
 	
-	//from elliptical
-	public void drawNewGraphics()
-	{
-		
-	}
+	
 	
 	private void calculateSetRenderCircularOrbitParams() {
 		
@@ -177,5 +174,11 @@ public class OutputPanel extends JPanel {
 		// but also the argument is its a good teaching aid. This becomes useless if more than one orbit is on view at once!!!!
 	}
 	
+	//==============================================================================================================================
+	//from elliptical
+		public void drawNewGraphics()
+		{
+			
+		}
 
 }

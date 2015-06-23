@@ -1,11 +1,13 @@
 package orbitSimulator;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
@@ -18,6 +20,8 @@ public class EllipticalOrbitInputs extends JPanel {
 	private JTextField tfOrbitalPeriod;
 	private JTextField textField;
 	private JTextField textField_1;
+	
+	private MainFrameListenerElliptical newGraphicsListener;
 
 	EllipticalOrbitInputs()
 	{
@@ -105,17 +109,45 @@ public class EllipticalOrbitInputs extends JPanel {
 		
 		JButton btnCalculateEllipticalOrbit = new JButton("Calculate Orbit");
 		add(btnCalculateEllipticalOrbit, "cell 3 11");
-	}
+	} // END CONSTRUCTOR
 	
-	public void setOrbitingBody()
-	{
+	// listener model view controller architecture
+		public void setNewGraphics(MainFrameListenerElliptical listener)
+		{
+			System.out.println("setNewGraphics()");
+			this.newGraphicsListener = listener;
+		}
 		
-	}
+		//@Override 
+					/* I'm not sure why this isnt required as it is in CircularOrbitInputs using the same architecture. 
+		               The only possibility I can think of is that circularPanel has a button which may mean that it needs 
+		               overriding .*/
+		public void actionPerformed(ActionEvent e) {
+			
+			getOrbitRenderScale();
+			calculateEllipticalOrbit();
+			newGraphicsListener.setNewGraphics();
+		}
 	
-
-	public static void resetEllipticalPanle() {
-		// TODO Auto-generated method stub
+		private void getOrbitRenderScale() {
+				// TODO Auto-generated method stub
+				
+			}
+	
+		private void calculateEllipticalOrbit() {
+				// TODO Auto-generated method stub
+				
+			}
+	
+		public void setOrbitingBody()
+		{
+			
+		}
 		
-	}
+	
+		public static void resetEllipticalPanel() {
+			// TODO Auto-generated method stub
+			
+		}
 	
 }

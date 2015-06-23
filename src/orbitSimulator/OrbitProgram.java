@@ -13,7 +13,7 @@ public class OrbitProgram {
 			public void run() {
 				
 					JFrame OrbitProgram = new OrbitMainFrame();
-					OrbitProgram.setSize(1000, 1000);
+					OrbitProgram.setSize(1000, 600);
 					OrbitProgram.setVisible(true);
 					OrbitProgram.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 			}
