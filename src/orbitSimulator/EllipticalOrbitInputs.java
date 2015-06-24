@@ -2,6 +2,7 @@ package orbitSimulator;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-public class EllipticalOrbitInputs extends JPanel {
+public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	// in put text fields - NB put the name of any added tf's to the inputTextFields array at the bottom of this list as a string
 	private JTextField tfArgOfPeri;
 	private JTextField tfPeriapsis;
@@ -30,6 +31,7 @@ public class EllipticalOrbitInputs extends JPanel {
 		"tfSemimajorAxis", "tfEccentricity", "tfOrbitalPeriod", "tfRAAN", "tfPeriod"};
 	private static final Map<String, Double> userInputs = new HashMap<String, Double>();
 	
+	private JButton btnCalculateEllipticalOrbit;
 	private MainFrameListenerElliptical newGraphicsListener;
 	
 
@@ -117,8 +119,11 @@ public class EllipticalOrbitInputs extends JPanel {
 		add(tfPeriod, "cell 3 10,growx");
 		tfPeriod.setColumns(10);
 		
-		JButton btnCalculateEllipticalOrbit = new JButton("Calculate Orbit");
+		btnCalculateEllipticalOrbit = new JButton("Calculate Orbit");
+		btnCalculateEllipticalOrbit.addActionListener(this);
 		add(btnCalculateEllipticalOrbit, "cell 3 11");
+		
+		
 	} // END CONSTRUCTOR
 	
 	// listener model view controller architecture
@@ -131,12 +136,12 @@ public class EllipticalOrbitInputs extends JPanel {
 		/*@Override -  I'm not sure why this isnt required as it is in CircularOrbitInputs using the same architecture. 
 		               The only possibility I can think of is that circularPanel has a button which may mean that it needs 
 		               overriding.*/
-		//@Override
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("in actionPerformed(ActionEvent e)");
 			//getOrbitRenderScale();
 			calculateEllipticalOrbit();
-			//newGraphicsListener.setNewGraphics();
+			newGraphicsListener.setNewGraphics();
 		}
 	
 		private void getOrbitRenderScale() {
