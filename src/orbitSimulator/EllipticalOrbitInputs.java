@@ -1,10 +1,12 @@
 package orbitSimulator;
 
 import java.awt.Font;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,93 +15,136 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class EllipticalOrbitInputs extends JPanel implements ActionListener {
-	// in put text fields - NB put the name of any added tf's to the inputTextFields array at the bottom of this list as a string
-	private JTextField tfArgOfPeri;
-	private JTextField tfPeriapsis;
-	private JTextField tfApoapsis;
-	private JTextField tfSemimajorAxis;
-	private JTextField tfEccentricity;
-	private JTextField tfOrbitalPeriod;
-	private JTextField tfRAAN;
-	private JTextField tfPeriod;
-	// Array of input text fields
-	private static String[] inputTextFields = {"tfArgOfPeri", "tfPeriapsis", "tfApoapsis", 
-		"tfSemimajorAxis", "tfEccentricity", "tfOrbitalPeriod", "tfRAAN", "tfPeriod"};
-	private static final Map<String, Double> userInputs = new HashMap<String, Double>();
+	// input text fields - NB need to add each new tf to getUserInputs() and a private parameter below  
+	private  JTextField tfArgOfPeri;
+	private  JTextField tfPeriapsis;
+	private  JTextField tfApoapsis;
+	private  JTextField tfSemimajorAxis;
+	private  JTextField tfEccentricity;
+	private  JTextField tfOrbitalPeriod;
+	private  JTextField tfRAAN;
+	
+	private double ArgOfPeri;
+	private double Periapsis;
+	private double Apoapsis;
+	private double SemimajorAxis; 
+	private double Eccentricity;
+	private double OrbitalPeriod;
+	private double RAAN;
+	private double Period;
+	
+	private boolean ArgOfPeriAdded;
+	private boolean PeriapsisAdded;
+	private boolean ApoapsisAdded;
+	private boolean SemimajorAxisAdded; 
+	private boolean EccentricityAdded;
+	private boolean OrbitalPeriodAdded;
+	private boolean RAANAdded;
+	private boolean PeriodAdded;
+	
 	
 	private JButton btnCalculateEllipticalOrbit;
 	private MainFrameListenerElliptical newGraphicsListener;
+	private JTextField tfSME;
+	private JTextField tfVelocity;
+	private JTextField tfInclination;
 	
 
 	EllipticalOrbitInputs()
 	{
-		setLayout(new MigLayout("", "[22.00][29.00][][grow]", "[][][][][][][][][][][][][12.00][][][][][][][]"));
+		setLayout(new MigLayout("", "[22.00][18.00][29.00][83.00][59.00][73.00][81.00]", "[][][][12.00][][14.00][][center][][][][]"));
 		
 		JLabel lblEllipticalOrbitInputs = new JLabel("Elliptical Orbit Inputs");
 		lblEllipticalOrbitInputs.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		add(lblEllipticalOrbitInputs, "cell 0 0 3 1");
+		add(lblEllipticalOrbitInputs, "cell 0 0 4 1");
 		
-		JLabel lblArgumentOfPeriapsis = new JLabel("Argument of Periapsis");
+		JLabel lblArgumentOfPeriapsis = new JLabel("Arg of Periapsis");
 		lblArgumentOfPeriapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblArgumentOfPeriapsis, "cell 1 2 2 1");
+		add(lblArgumentOfPeriapsis, "cell 1 1 2 1");
 		
 		tfArgOfPeri = new JTextField();
 		tfArgOfPeri.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfArgOfPeri, "cell 3 2,growx");
+		add(tfArgOfPeri, "cell 3 1,growx");
 		tfArgOfPeri.setColumns(10);
 		
 		JLabel lblRadius = new JLabel("Radius");
 		lblRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblRadius, "cell 1 3 2 1");
+		add(lblRadius, "cell 1 2 2 1");
 		
 		JLabel lblPeriapsis = new JLabel("Periapsis");
 		lblPeriapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblPeriapsis, "cell 2 4,alignx left");
+		add(lblPeriapsis, "cell 2 3,alignx left");
 		
 		tfPeriapsis = new JTextField();
 		tfPeriapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfPeriapsis, "cell 3 4,growx");
+		add(tfPeriapsis, "cell 3 3,growx");
 		tfPeriapsis.setColumns(10);
 		
 		JLabel lblApoapsis = new JLabel("Apoapsis");
 		lblApoapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblApoapsis, "cell 2 5,alignx left");
+		add(lblApoapsis, "cell 4 3,alignx left");
 		
 		tfApoapsis = new JTextField();
 		tfApoapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfApoapsis, "cell 3 5,growx");
+		add(tfApoapsis, "cell 5 3,growx");
 		tfApoapsis.setColumns(10);
 		
 		JLabel lblSemimajorAxis = new JLabel("Semimajor Axis");
 		lblSemimajorAxis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblSemimajorAxis, "cell 1 6 2 1");
+		add(lblSemimajorAxis, "cell 1 4 2 1");
 		
 		tfSemimajorAxis = new JTextField();
 		tfSemimajorAxis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfSemimajorAxis, "cell 3 6,growx");
+		add(tfSemimajorAxis, "cell 3 4,growx");
 		tfSemimajorAxis.setColumns(10);
 		
 		JLabel lblEccentricity = new JLabel("Eccentricity");
 		lblEccentricity.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblEccentricity, "cell 1 7 2 1");
+		add(lblEccentricity, "cell 1 5 2 1");
 		
 		tfEccentricity = new JTextField();
 		tfEccentricity.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfEccentricity, "cell 3 7,growx");
+		add(tfEccentricity, "cell 3 5,growx");
 		tfEccentricity.setColumns(10);
 		
 		JLabel lblInclination = new JLabel("Inclination");
 		lblInclination.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblInclination, "cell 1 8 2 1,alignx left");
+		add(lblInclination, "cell 1 6 2 1,alignx left");
 		
-		tfOrbitalPeriod = new JTextField();
-		tfOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfOrbitalPeriod, "cell 3 8,growx,aligny top");
-		tfOrbitalPeriod.setColumns(10);
+		tfInclination = new JTextField();
+		tfInclination.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfInclination, "cell 3 6,growx,aligny top");
+		tfInclination.setColumns(10);
+		
+		JLabel lblVelecity = new JLabel("Velocity @");
+		lblVelecity.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblVelecity, "cell 1 7 2 1,alignx left");
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(comboBox, "cell 3 7,growx");
+		
+		tfVelocity = new JTextField();
+		tfVelocity.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfVelocity, "cell 4 7 2 1,growx");
+		tfVelocity.setColumns(10);
+		
+		JLabel lblSME = new JLabel("SME");
+		lblSME.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblSME, "cell 1 8 2 1");
+		
+		tfSME = new JTextField();
+		tfSME.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfSME, "cell 3 8,growx");
+		tfSME.setColumns(10);
 		
 		JLabel lblRaan = new JLabel("RAAN");
 		lblRaan.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -114,14 +159,38 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		lblOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(lblOrbitalPeriod, "cell 1 10 2 1,alignx left");
 		
-		tfPeriod = new JTextField();
-		tfPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfPeriod, "cell 3 10,growx");
-		tfPeriod.setColumns(10);
+		tfOrbitalPeriod = new JTextField();
+		tfOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfOrbitalPeriod, "cell 3 10,growx,aligny top");
+		tfOrbitalPeriod.setColumns(10);
 		
 		btnCalculateEllipticalOrbit = new JButton("Calculate Orbit");
 		btnCalculateEllipticalOrbit.addActionListener(this);
-		add(btnCalculateEllipticalOrbit, "cell 3 11");
+		add(btnCalculateEllipticalOrbit, "cell 4 11 3 1");
+		
+		// Listen for changes in the text
+		DocumentListener tfListener = new DocumentListener() {
+		  public void changedUpdate(DocumentEvent e) {
+			  JTextField tfEdited = (JTextField)((EventObject) e).getSource();
+		    warn();
+		  }
+		  public void removeUpdate(DocumentEvent e) {
+		    warn();
+		  }
+		  public void insertUpdate(DocumentEvent e) {
+			  JTextField tfEdited = (JTextField)((EventObject) e).getSource();
+		    warn();
+		  }
+
+		  public void warn() {
+			  /*if (Integer.parseInt(textField.getText())<=0){
+		       JOptionPane.showMessageDialog(null,
+		          "Error: Please enter number bigger than 0", "Error Massage",
+		          JOptionPane.ERROR_MESSAGE);
+		     }*/
+			  System.out.print("tf activated");
+		  }
+		};
 		
 		
 	} // END CONSTRUCTOR
@@ -159,26 +228,97 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			}
 		
 		private void getUserInputs() {
-			System.out.println(" in getUserIputs()");
-			int count = inputTextFields.length;
-			for(int i = 0; i < count; i++){
-				String textFieldName = inputTextFields[i];
-				Object textField = textFieldName;
-				
-				if (((JTextField) textField).getText() != null || ((JTextField) textField).getText() == "") {
-					double textFieldValue = Double.parseDouble(((JTextField) textField).getText());
-					String paramName = textFieldName.substring(2);
-					
-					userInputs.put(paramName, textFieldValue);
-					System.out.println("item " + i + "entered into userInputs is: " + paramName + " = " + textFieldValue);
-				}
-			}
 			
+			if (isNumeric(tfArgOfPeri.getText()) == true) {
+				ArgOfPeri = Double.parseDouble(tfArgOfPeri.getText());
+				ArgOfPeriAdded = true;
+			}
+			else {
+				ArgOfPeriAdded = false;
+			}
+			//System.out.println("ArgOfPeri = " + ArgOfPeri);
+			
+			if (isNumeric(tfPeriapsis.getText()) == true) {
+				Periapsis = Double.parseDouble(tfPeriapsis.getText());
+				PeriapsisAdded = true;
+			}
+			else {
+				PeriapsisAdded = false;
+			}
+			//System.out.println("Periapsis = " + Periapsis);
+			
+			if (isNumeric(tfApoapsis.getText()) == true) {
+				Apoapsis = Double.parseDouble(tfApoapsis.getText());
+				ApoapsisAdded = true;
+			}
+			else {
+				ApoapsisAdded = false;
+			}
+			//System.out.println("Apoapsis = " + Apoapsis);
+			
+			if (isNumeric(tfSemimajorAxis.getText()) == true) {
+				SemimajorAxis = Double.parseDouble(tfSemimajorAxis.getText());
+				SemimajorAxisAdded = true;
+			}
+			else {
+				SemimajorAxisAdded = false;
+			}
+			//System.out.println("SemimajorAxis = " + SemimajorAxis);
+			
+			if (isNumeric(tfEccentricity.getText()) == true) {
+				Eccentricity = Double.parseDouble(tfEccentricity.getText());
+				EccentricityAdded = true;
+			}
+			else {
+				EccentricityAdded = false;
+			}
+			//System.out.println("Eccentricity = "  + Eccentricity);
+			
+			if (isNumeric(tfOrbitalPeriod.getText()) == true) {
+				OrbitalPeriod = Double.parseDouble(tfOrbitalPeriod.getText());
+				OrbitalPeriodAdded = true;
+			}
+			else {
+				OrbitalPeriodAdded = false;
+			}
+			//System.out.println("OrbitalPeriod = " + OrbitalPeriod);
+			
+			if (isNumeric(tfRAAN.getText()) == true) {
+				RAAN = Double.parseDouble(tfRAAN.getText());
+				RAANAdded = true;
+			}
+			else {
+				RAANAdded = false;
+			}
+			//System.out.println("RANN = " + RAAN);
+			
+			if (isNumeric(tfOrbitalPeriod.getText()) == true) {
+				Period = Double.parseDouble(tfOrbitalPeriod.getText());
+				PeriodAdded = true;
+			}			
+			else {
+				PeriodAdded = false;
+			}
+			//System.out.println("Period = " + Period);
 		}
+		
 
 		public static void resetEllipticalPanel() {
 			// TODO Auto-generated method stub
 			
+		}
+		
+		public static boolean isNumeric(String str)  
+		{  
+		  try  
+		  {  
+		    double d = Double.parseDouble(str);  
+		  }  
+		  catch(NumberFormatException nfe)  
+		  {  
+		    return false;  
+		  }  
+		  return true;  
 		}
 	
 }
