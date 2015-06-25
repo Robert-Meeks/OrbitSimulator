@@ -171,7 +171,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		btnCalculateEllipticalOrbit.addActionListener(this);
 		add(btnCalculateEllipticalOrbit, "cell 4 11 3 1");
 		
-		// Listen for changes in the text
+		// Listen for changes to textFields
 		tfArgOfPeri.getDocument().addDocumentListener(new DocumentListener() {
 			  public void changedUpdate(DocumentEvent e) {
 			    warn();
