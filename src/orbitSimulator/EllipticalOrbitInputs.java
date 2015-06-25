@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.Color;
 
 public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	// input text fields - NB need to add each new tf to getUserInputs() and a private parameter below  
@@ -56,6 +57,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	private JTextField tfSME;
 	private JTextField tfVelocity;
 	private JTextField tfInclination;
+	private DocumentListener tfListener;
 	
 
 	EllipticalOrbitInputs()
@@ -71,6 +73,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(lblArgumentOfPeriapsis, "cell 1 1 2 1");
 		
 		tfArgOfPeri = new JTextField();
+		tfArgOfPeri.setBackground(Color.WHITE);
 		tfArgOfPeri.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(tfArgOfPeri, "cell 3 1,growx");
 		tfArgOfPeri.setColumns(10);
@@ -169,28 +172,22 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(btnCalculateEllipticalOrbit, "cell 4 11 3 1");
 		
 		// Listen for changes in the text
-		DocumentListener tfListener = new DocumentListener() {
-		  public void changedUpdate(DocumentEvent e) {
-			  JTextField tfEdited = (JTextField)((EventObject) e).getSource();
-		    warn();
-		  }
-		  public void removeUpdate(DocumentEvent e) {
-		    warn();
-		  }
-		  public void insertUpdate(DocumentEvent e) {
-			  JTextField tfEdited = (JTextField)((EventObject) e).getSource();
-		    warn();
-		  }
+		tfArgOfPeri.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+			    warn();
+			  }
+			  public void removeUpdate(DocumentEvent e) {
+			    warn();
+			  }
+			  public void insertUpdate(DocumentEvent e) {
+			    warn();
+			  }
 
-		  public void warn() {
-			  /*if (Integer.parseInt(textField.getText())<=0){
-		       JOptionPane.showMessageDialog(null,
-		          "Error: Please enter number bigger than 0", "Error Massage",
-		          JOptionPane.ERROR_MESSAGE);
-		     }*/
-			  System.out.print("tf activated");
-		  }
-		};
+			  public void warn() {
+			     System.out.println("tf edited");
+			  }
+			});
+		
 		
 		
 	} // END CONSTRUCTOR
@@ -232,6 +229,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			if (isNumeric(tfArgOfPeri.getText()) == true) {
 				ArgOfPeri = Double.parseDouble(tfArgOfPeri.getText());
 				ArgOfPeriAdded = true;
+				
 			}
 			else {
 				ArgOfPeriAdded = false;
