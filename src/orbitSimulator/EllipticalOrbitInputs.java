@@ -199,25 +199,39 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 
 		    @Override
 		    public void removeUpdate(DocumentEvent e) {
-		        doStuff(e);
+		        event(e);
 		    }
 
 		    @Override
 		    public void insertUpdate(DocumentEvent e) {
-		        doStuff(e);
+		    	event(e);
 		    }
 
 		    @Override
 		    public void changedUpdate(DocumentEvent e) {
-		        doStuff(e);
+		    	event(e);
 		    }
 
-		    private void doStuff(DocumentEvent e) {
+		    private void event(DocumentEvent e) {
 		        Object owner = e.getDocument().getProperty("owner");
 		        String tfName = ((JTextField) owner).getName();
 		       System.out.println("the textfield that changed is: " + tfName);
-		       // enableDetachButton(getRootPane());
-		       // changeColor((JTextField) owner);
+		       
+		       // General logic
+		       
+		       switch(tfName) {
+		       case "argofperi":
+			       String tfVal = tfArgOfPeri.getText();
+		    	   break;
+		       }
+		       // READ BEFORE STARTING - will be best to put these methods at bottom in helper method section including the switch above
+		    // check for sign 
+		       private void checkForSign(String str) {
+		    	   
+		       }
+		    // check val is numeric 
+		       
+		       // call relevant method to make sure the relevant textfields are changed so the user cant edit them
 		    }
 		};
 		
@@ -232,6 +246,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfPeriod.getDocument().addDocumentListener(docListener);
 		tfRAAN.getDocument().addDocumentListener(docListener);
 		
+		// kept this to remind me how to make a listener for individual tf's
 		/*tfArgOfPeri.getDocument().addDocumentListener(new DocumentListener() {
 			  public void changedUpdate(DocumentEvent e) {
 			    warn();
@@ -247,143 +262,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 				  System.out.println("tf edited");
 			  }
 			});
-		tfPeriapsis.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfApoapsis.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfSemimajorAxis.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfEccentricity.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfInclination.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfVelocity.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfSME.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfPeriod.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});
-		tfRAAN.getDocument().addDocumentListener(new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void removeUpdate(DocumentEvent e) {
-				    warn();
-				  }
-				  public void insertUpdate(DocumentEvent e) {
-				    warn();
-				  }
-
-				  public void warn() {
-				     System.out.println("tf edited");
-				  }
-				});*/
-		
-		
+		*/
 		
 	} // END CONSTRUCTOR
 	
@@ -404,7 +283,8 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			calculateEllipticalOrbit();
 			newGraphicsListener.setNewGraphics();
 		}
-	
+	//-----------------------------------------------
+		
 		private void getOrbitRenderScale() {
 				// TODO Auto-generated method stub
 				
