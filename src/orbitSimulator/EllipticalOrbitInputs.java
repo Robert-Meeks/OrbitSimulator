@@ -30,7 +30,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	private  JTextField tfApoapsis;
 	private  JTextField tfSemimajorAxis;
 	private  JTextField tfEccentricity;
-	private  JTextField tfOrbitalPeriod;
+	private  JTextField tfPeriod;
 	private  JTextField tfRAAN;
 	
 	private double ArgOfPeri;
@@ -162,10 +162,10 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		lblOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(lblOrbitalPeriod, "cell 1 10 2 1,alignx left");
 		
-		tfOrbitalPeriod = new JTextField();
-		tfOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfOrbitalPeriod, "cell 3 10,growx,aligny top");
-		tfOrbitalPeriod.setColumns(10);
+		tfPeriod = new JTextField();
+		tfPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfPeriod, "cell 3 10,growx,aligny top");
+		tfPeriod.setColumns(10);
 		
 		btnCalculateEllipticalOrbit = new JButton("Calculate Orbit");
 		btnCalculateEllipticalOrbit.addActionListener(this);
@@ -184,9 +184,144 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			  }
 
 			  public void warn() {
-			     System.out.println("tf edited");
+			     
 			  }
 			});
+		tfPeriapsis.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfApoapsis.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfSemimajorAxis.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfEccentricity.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfInclination.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfVelocity.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfSME.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfPeriod.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
+		tfRAAN.getDocument().addDocumentListener(new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    warn();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    warn();
+				  }
+
+				  public void warn() {
+				     System.out.println("tf edited");
+				  }
+				});
 		
 		
 		
@@ -272,8 +407,8 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			}
 			//System.out.println("Eccentricity = "  + Eccentricity);
 			
-			if (isNumeric(tfOrbitalPeriod.getText()) == true) {
-				OrbitalPeriod = Double.parseDouble(tfOrbitalPeriod.getText());
+			if (isNumeric(tfPeriod.getText()) == true) {
+				OrbitalPeriod = Double.parseDouble(tfPeriod.getText());
 				OrbitalPeriodAdded = true;
 			}
 			else {
@@ -290,8 +425,8 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			}
 			//System.out.println("RANN = " + RAAN);
 			
-			if (isNumeric(tfOrbitalPeriod.getText()) == true) {
-				Period = Double.parseDouble(tfOrbitalPeriod.getText());
+			if (isNumeric(tfPeriod.getText()) == true) {
+				Period = Double.parseDouble(tfPeriod.getText());
 				PeriodAdded = true;
 			}			
 			else {
