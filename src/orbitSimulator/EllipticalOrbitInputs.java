@@ -21,6 +21,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+
 import java.awt.Color;
 
 public class EllipticalOrbitInputs extends JPanel implements ActionListener {
@@ -172,7 +174,65 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(btnCalculateEllipticalOrbit, "cell 4 11 3 1");
 		
 		// Listen for changes to textFields
-		tfArgOfPeri.getDocument().addDocumentListener(new DocumentListener() {
+		tfArgOfPeri.getDocument().putProperty("owner", tfArgOfPeri); 
+		tfArgOfPeri.setName("argofperi");
+		tfPeriapsis.getDocument().putProperty("owner", tfPeriapsis);
+		tfPeriapsis.setName("periapsis");
+		tfApoapsis.getDocument().putProperty("owner", tfApoapsis);
+		tfApoapsis.setName("apoapsis");
+		tfSemimajorAxis.getDocument().putProperty("owner", tfSemimajorAxis);
+		tfSemimajorAxis.setName("SemimajorAxis");
+		tfEccentricity.getDocument().putProperty("owner", tfEccentricity);
+		tfEccentricity.setName("Eccentricity");
+		tfInclination.getDocument().putProperty("owner", tfInclination);
+		tfInclination.setName("Inclination");
+		tfVelocity.getDocument().putProperty("owner", tfVelocity);
+		tfVelocity.setName("Velocity");
+		tfSME.getDocument().putProperty("owner", tfSME);
+		tfSME.setName("sme");
+		tfPeriod.getDocument().putProperty("owner", tfPeriod);
+		tfPeriod.setName("Period");
+		tfRAAN.getDocument().putProperty("owner", tfRAAN);
+		tfRAAN.setName("RAAN");
+		
+		DocumentListener docListener = new DocumentListener() {
+
+		    @Override
+		    public void removeUpdate(DocumentEvent e) {
+		        doStuff(e);
+		    }
+
+		    @Override
+		    public void insertUpdate(DocumentEvent e) {
+		        doStuff(e);
+		    }
+
+		    @Override
+		    public void changedUpdate(DocumentEvent e) {
+		        doStuff(e);
+		    }
+
+		    private void doStuff(DocumentEvent e) {
+		        Object owner = e.getDocument().getProperty("owner");
+		        String tfName = ((JTextField) owner).getName();
+		       System.out.println("the textfield that changed is: " + tfName);
+		       // enableDetachButton(getRootPane());
+		       // changeColor((JTextField) owner);
+		    }
+		};
+		
+		tfArgOfPeri.getDocument().addDocumentListener(docListener);
+		tfPeriapsis.getDocument().addDocumentListener(docListener);
+		tfApoapsis.getDocument().addDocumentListener(docListener);
+		tfSemimajorAxis.getDocument().addDocumentListener(docListener);
+		tfEccentricity.getDocument().addDocumentListener(docListener);
+		tfInclination.getDocument().addDocumentListener(docListener);
+		tfVelocity.getDocument().addDocumentListener(docListener);
+		tfSME.getDocument().addDocumentListener(docListener);
+		tfPeriod.getDocument().addDocumentListener(docListener);
+		tfRAAN.getDocument().addDocumentListener(docListener);
+		
+		/*tfArgOfPeri.getDocument().addDocumentListener(new DocumentListener() {
 			  public void changedUpdate(DocumentEvent e) {
 			    warn();
 			  }
@@ -184,7 +244,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			  }
 
 			  public void warn() {
-			     
+				  System.out.println("tf edited");
 			  }
 			});
 		tfPeriapsis.getDocument().addDocumentListener(new DocumentListener() {
@@ -321,7 +381,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 				  public void warn() {
 				     System.out.println("tf edited");
 				  }
-				});
+				});*/
 		
 		
 		
