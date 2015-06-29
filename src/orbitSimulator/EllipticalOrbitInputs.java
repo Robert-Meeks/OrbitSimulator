@@ -15,21 +15,28 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 import java.awt.Color;
 
+import javax.swing.border.EmptyBorder;
+
 public class EllipticalOrbitInputs extends JPanel implements ActionListener {
+	
 	// input text fields - NB need to add each new tf to getUserInputs() and a private parameter below  
 	private  JTextField tfArgOfPeri;
 	private  JTextField tfPeriapsis;
-	private  JTextField tfApoapsis;
+	private static  JTextField tfApoapsis;
 	private  JTextField tfSemimajorAxis;
 	private  JTextField tfEccentricity;
 	private  JTextField tfPeriod;
@@ -61,14 +68,23 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	private JTextField tfInclination;
 	private DocumentListener tfListener;
 	
+	private JLabel lblEllipticalInputWarning;
 
 	EllipticalOrbitInputs()
 	{
+		setBorder(new EmptyBorder(0, 0, 0, 0));
+		
 		setLayout(new MigLayout("", "[22.00][18.00][29.00][83.00][59.00][73.00][81.00]", "[][][][12.00][][14.00][][center][][][][]"));
 		
 		JLabel lblEllipticalOrbitInputs = new JLabel("Elliptical Orbit Inputs");
 		lblEllipticalOrbitInputs.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		add(lblEllipticalOrbitInputs, "cell 0 0 4 1");
+		
+		lblEllipticalInputWarning = new JLabel("numbers only (3.4, +3.4, -3.4)");
+		lblEllipticalInputWarning.setForeground(Color.RED);
+		lblEllipticalInputWarning.setVisible(false);
+		add(lblEllipticalInputWarning, "cell 4 0 3 1");
+		
 		
 		JLabel lblArgumentOfPeriapsis = new JLabel("Arg of Periapsis");
 		lblArgumentOfPeriapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -216,22 +232,45 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		        Object owner = e.getDocument().getProperty("owner");
 		        String tfName = ((JTextField) owner).getName();
 		       System.out.println("the textfield that changed is: " + tfName);
-		       
+		       // READ BEFORE STARTING - will be best to put these methods at bottom in helper method section including the switch above  
 		       // General logic
-		       
+		       String tfVal = "unassigned";
 		       switch(tfName) {
 		       case "argofperi":
-			       String tfVal = tfArgOfPeri.getText();
+			       tfVal = tfArgOfPeri.getText();
 		    	   break;
 		       }
-		       // READ BEFORE STARTING - will be best to put these methods at bottom in helper method section including the switch above
+		     
 		    // check for sign 
-		       private void checkForSign(String str) {
+		      // char sign = getSign(tfVal);
+		    // check val is numeric
+		       String currentTextFieldIsEmpty = "unassigned"; // can be "unassigned" "empty" or "populated" 
+		       if (isNumeric(tfVal) == true || tfVal.isEmpty() == true) {
+		    	   // make label warning invisible
+		    	   lblEllipticalInputWarning.setVisible(false);
+		    	   switch(tfName) {
+			       case "argofperi":
+			    	   tfArgOfPeri.setBackground(Color.WHITE);
+			    	   break;
+		    	   }
 		    	   
+		    	   currentTextFieldIsEmpty = "empty";
 		       }
-		    // check val is numeric 
+		       else if (isNumeric(tfVal) == false) {
+		    	   // make warning sign visible
+		    	   lblEllipticalInputWarning.setVisible(true);
+		    	   // make background of current tf red
+		    	   switch(tfName) {
+			       case "argofperi":
+				       tfArgOfPeri.setBackground(Color.decode("#FF9A9A"));
+			    	   break;
+			       }
+		    	   // need to know the field is populated for setTextFieldCombinations() below
+		    	   currentTextFieldIsEmpty = "populated";
+		       }
 		       
 		       // call relevant method to make sure the relevant textfields are changed so the user cant edit them
+		      // setTextFieldCombinations(tfName, currentTextFieldIsEmpty);
 		    }
 		};
 		
@@ -263,7 +302,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			  }
 			});
 		*/
-		
+		Border defaultBorder = tfSME.getBorder();
 	} // END CONSTRUCTOR
 	
 	// listener model view controller architecture
@@ -287,7 +326,6 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		
 		private void getOrbitRenderScale() {
 				// TODO Auto-generated method stub
-				
 			}
 	
 		private void calculateEllipticalOrbit() {
@@ -392,6 +430,95 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		    return false;  
 		  }  
 		  return true;  
+		}
+		
+		public static char getSign(String var) {
+			
+			char possSignVal = var.charAt(0);
+			char sign = '0';
+			if (possSignVal == '-') {
+				sign = '-';
+			}
+			else /*possSignVal therefore = '+' || a number which means it is +ve */ {
+				sign = '+';
+			}
+			
+			return sign;
+		}
+		
+		public static void setTextFieldCombinations(String tfName, String currentTextFieldIsEmpty) {
+			switch(tfName) {
+			case "argofperi": // NOT REQUIRED
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "periapsis":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "apoapsis":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "semimajoraxis":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "eccentricity":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "inclination":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "velocity":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "sme":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "period":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			case "raan":
+				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
+					
+				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
+					
+				}
+				break;
+			}
 		}
 	
 }
