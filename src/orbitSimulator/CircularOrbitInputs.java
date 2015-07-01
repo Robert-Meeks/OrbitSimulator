@@ -197,6 +197,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		tfInclination.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(tfInclination, "cell 3 8,growx,aligny top");
 		tfInclination.setColumns(10);
+		
+		JLabel lblUnitDegree = new JLabel("\u00B0");
+		add(lblUnitDegree, "cell 4 8");
 
 
 		JLabel lblSelectDesiredScale = new JLabel("Select Desired Scale");
