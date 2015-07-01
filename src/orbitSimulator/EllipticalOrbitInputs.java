@@ -97,13 +97,24 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	JCheckBox chckbxNewVelocityAtRadius;
 	Color defaultBackground = Color.WHITE;
 	Color warningBackground = Color.decode("#FF9A9A");
+	private JLabel lblUnitsApoPeriRadius;
+	private JLabel lblUnitsSemimajorAxis;
+	private JLabel lblUnitDegrees;
+	private JLabel lblUnitDegree1;
+	private JLabel lblUnitHr;
+	private JLabel lblUnitVelocutyAtRadiusKm;
+	private JLabel lblUnitVelocityAtRadius1;
+	private JLabel lblUnitSME;
+	private JLabel lblub;
+	private JLabel lblKm;
+	private JLabel lblKm_1;
 	
 
 	EllipticalOrbitInputs()
 	{
 		setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		setLayout(new MigLayout("", "[22.00][18.00][29.00][83.00,grow][59.00][73.00,grow][81.00]", "[][][][12.00][][14.00][][center][][][][][][]"));
+		setLayout(new MigLayout("", "[22.00][18.00][29.00][74.00,grow][60.00][37.00,grow][79.00][44.00]", "[][][][12.00][][14.00][][center][][][][][][]"));
 		
 		JLabel lblEllipticalOrbitInputs = new JLabel("Elliptical Orbit Inputs");
 		lblEllipticalOrbitInputs.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -112,7 +123,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		lblEllipticalInputWarning = new JLabel("numbers only (3.4, +3.4, -3.4)");
 		lblEllipticalInputWarning.setForeground(Color.decode("#FF9A9A"));
 		lblEllipticalInputWarning.setVisible(false);
-		add(lblEllipticalInputWarning, "cell 4 0 3 1");
+		add(lblEllipticalInputWarning, "cell 4 0 4 1");
 		
 		
 		JLabel lblArgumentOfPeriapsis = new JLabel("Arg of Periapsis");
@@ -124,6 +135,9 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfArgOfPeri.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(tfArgOfPeri, "cell 3 1,growx");
 		tfArgOfPeri.setColumns(10);
+		
+		lblub = new JLabel("\u00B0");
+		add(lblub, "cell 4 1");
 		
 		JLabel lblRadius = new JLabel("Radius");
 		lblRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -138,14 +152,25 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(tfPeriapsis, "cell 3 3,growx");
 		tfPeriapsis.setColumns(10);
 		
+		lblKm_1 = new JLabel("Km                ");
+		lblKm_1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblKm_1, "cell 4 3");
+		
 		JLabel lblApoapsis = new JLabel("Apoapsis");
 		lblApoapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblApoapsis, "cell 4 3,alignx left");
+		add(lblApoapsis, "cell 5 3,alignx right");
 		
 		tfApoapsis = new JTextField();
 		tfApoapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfApoapsis, "cell 5 3,growx");
+		add(tfApoapsis, "cell 6 3,growx");
 		tfApoapsis.setColumns(10);
+		tfApoapsis.getDocument().putProperty("owner", tfApoapsis);
+		tfApoapsis.setName("apoapsis");
+		
+		
+		lblUnitsApoPeriRadius = new JLabel("Km");
+		lblUnitsApoPeriRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitsApoPeriRadius, "cell 7 3");
 		
 		JLabel lblSemimajorAxis = new JLabel("Semimajor Axis");
 		lblSemimajorAxis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -155,6 +180,10 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfSemimajorAxis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(tfSemimajorAxis, "cell 3 4,growx");
 		tfSemimajorAxis.setColumns(10);
+		
+		lblUnitsSemimajorAxis = new JLabel("Km");
+		lblUnitsSemimajorAxis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitsSemimajorAxis, "cell 4 4");
 		
 		JLabel lblEccentricity = new JLabel("Eccentricity");
 		lblEccentricity.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -174,32 +203,18 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(tfInclination, "cell 3 6,growx,aligny top");
 		tfInclination.setColumns(10);
 		
+		lblUnitDegrees = new JLabel(" \u00B0");
+		lblUnitDegrees.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitDegrees, "cell 4 6");
+		
 		JLabel lblVelecity = new JLabel("Velocity at:");
 		lblVelecity.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblVelecity, "cell 1 7 2 1,alignx left");
+		add(lblVelecity, "flowx,cell 1 7 2 1,alignx left");
 		
-		chckbxNewVelocityAtRadius = new JCheckBox("");
-		chckbxNewVelocityAtRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(chckbxNewVelocityAtRadius, "flowx,cell 3 7");
-		chckbxNewVelocityAtRadius.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					tfRadiusForVelocity.setEditable(true);
-					tfVelocityAtRadius.setEditable(true);
-					
-				}
-				else if (e.getStateChange() == ItemEvent.DESELECTED) {
-					tfRadiusForVelocity.setEditable(false);
-					tfVelocityAtRadius.setEditable(false);
-				}	
-			}
-		});
-		
-		JLabel lblNewLabel = new JLabel("Radius");
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblNewLabel, "cell 3 7,alignx right");
+		final JLabel lblUnitRadiusForVelocity = new JLabel("Radius =");
+		lblUnitRadiusForVelocity.setForeground(Color.LIGHT_GRAY);
+		lblUnitRadiusForVelocity.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitRadiusForVelocity, "cell 3 7,alignx right");
 		
 		tfRadiusForVelocity = new JTextField();
 		tfRadiusForVelocity.setEditable(false);
@@ -208,8 +223,25 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfRadiusForVelocity.setColumns(10);
 
 		
-		JLabel label = new JLabel("=");
-		add(label, "flowx,cell 5 7");
+		final JLabel lblUnitkmAndArrow = new JLabel("Km \u21D2");
+		lblUnitkmAndArrow.setForeground(Color.LIGHT_GRAY);
+		lblUnitkmAndArrow.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitkmAndArrow, "flowx,cell 5 7");
+		
+		
+				tfVelocityAtRadius = new JTextField();
+				tfVelocityAtRadius.setEditable(false);
+				tfVelocityAtRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+				add(tfVelocityAtRadius, "cell 6 7");
+				tfVelocityAtRadius.setColumns(10);
+				tfVelocityAtRadius.getDocument().putProperty("owner", tfVelocityAtRadius);
+				tfVelocityAtRadius.setName("velocityatradius");
+				
+		
+		lblUnitVelocityAtRadius1 = new JLabel("Km/s");
+		lblUnitVelocityAtRadius1.setForeground(Color.LIGHT_GRAY);
+		lblUnitVelocityAtRadius1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitVelocityAtRadius1, "cell 7 7");
 		
 		JLabel lblVelocityAtRP = new JLabel("Periapsis");
 		lblVelocityAtRP.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -220,14 +252,25 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(tfVelocityAtPeriapsis, "cell 3 8,growx");
 		tfVelocityAtPeriapsis.setColumns(10);
 		
+		lblKm = new JLabel("Km/s");
+		lblKm.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblKm, "cell 4 8");
+		
 		JLabel lblVelocityAtApoapsis = new JLabel("Apoapsis");
 		lblVelocityAtApoapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblVelocityAtApoapsis, "cell 4 8,alignx trailing");
+		add(lblVelocityAtApoapsis, "cell 5 8,alignx trailing");
 		
 		tfVelocityAtApoapsis = new JTextField();
 		tfVelocityAtApoapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfVelocityAtApoapsis, "cell 5 8,growx");
+		add(tfVelocityAtApoapsis, "cell 6 8,growx");
 		tfVelocityAtApoapsis.setColumns(10);
+		tfVelocityAtApoapsis.getDocument().putProperty("owner", tfVelocityAtApoapsis);
+		tfVelocityAtApoapsis.setName("velocityatapoapsis");
+		
+		
+		lblUnitVelocutyAtRadiusKm = new JLabel("Km/s");
+		lblUnitVelocutyAtRadiusKm.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitVelocutyAtRadiusKm, "cell 7 8");
 		
 		JLabel lblSME = new JLabel("SME");
 		lblSME.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -238,6 +281,10 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(tfSME, "cell 3 9,growx");
 		tfSME.setColumns(10);
 		
+		lblUnitSME = new JLabel("KmKg/s");
+		lblUnitSME.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitSME, "cell 4 9");
+		
 		JLabel lblRaan = new JLabel("RAAN");
 		lblRaan.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(lblRaan, "cell 1 10 2 1");
@@ -247,17 +294,14 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(tfRAAN, "cell 3 10,growx");
 		tfRAAN.setColumns(10);
 		
+		lblUnitDegree1 = new JLabel(" \u00B0");
+		lblUnitDegree1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitDegree1, "cell 4 10");
+		
 		tfPeriod = new JTextField();
 		tfPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfPeriod, "cell 3 11,growx,aligny top");
+		add(tfPeriod, "cell 3 11,growx");
 		tfPeriod.setColumns(10);
-
-
-		tfVelocityAtRadius = new JTextField();
-		tfVelocityAtRadius.setEditable(false);
-		tfVelocityAtRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfVelocityAtRadius, "cell 5 7");
-		tfVelocityAtRadius.setColumns(10);
 		
 		
 		// Listen for changes to textFields
@@ -265,8 +309,6 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfArgOfPeri.setName("argofperi");
 		tfPeriapsis.getDocument().putProperty("owner", tfPeriapsis);
 		tfPeriapsis.setName("periapsis");
-		tfApoapsis.getDocument().putProperty("owner", tfApoapsis);
-		tfApoapsis.setName("apoapsis");
 		tfSemimajorAxis.getDocument().putProperty("owner", tfSemimajorAxis);
 		tfSemimajorAxis.setName("semimajoraxis");
 		tfEccentricity.getDocument().putProperty("owner", tfEccentricity);
@@ -281,21 +323,45 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfPeriod.setName("period");
 		tfRadiusForVelocity.getDocument().putProperty("owner", tfRadiusForVelocity);
 		tfRadiusForVelocity.setName("radiusforvelocity");
-		tfVelocityAtRadius.getDocument().putProperty("owner", tfVelocityAtRadius);
-		tfVelocityAtRadius.setName("velocityatradius");
 		tfVelocityAtPeriapsis.getDocument().putProperty("owner", tfVelocityAtPeriapsis);
 		tfVelocityAtPeriapsis.setName("velocityatperiapsis");
-		tfVelocityAtApoapsis.getDocument().putProperty("owner", tfVelocityAtApoapsis);
-		tfVelocityAtApoapsis.setName("velocityatapoapsis");
 		
 		
 		btnCalculateEllipticalOrbit = new JButton("Calculate Orbit");
 		btnCalculateEllipticalOrbit.addActionListener(this);
-		add(btnCalculateEllipticalOrbit, "cell 4 12 3 2");
+		
+		lblUnitHr = new JLabel("hr");
+		lblUnitHr.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitHr, "cell 4 11");
+		add(btnCalculateEllipticalOrbit, "cell 4 12 4 2");
 		
 		JLabel lblOrbitalPeriod = new JLabel("Orbital Period");
 		lblOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(lblOrbitalPeriod, "cell 1 11 2 1,alignx left");
+		
+		chckbxNewVelocityAtRadius = new JCheckBox("");
+		chckbxNewVelocityAtRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(chckbxNewVelocityAtRadius, "cell 2 7,alignx right");
+		chckbxNewVelocityAtRadius.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					tfRadiusForVelocity.setEditable(true);
+					tfVelocityAtRadius.setEditable(true);
+					lblUnitRadiusForVelocity.setForeground(Color.BLACK);
+					lblUnitkmAndArrow.setForeground(Color.BLACK);
+					lblUnitVelocityAtRadius1.setForeground(Color.BLACK);
+				}
+				else if (e.getStateChange() == ItemEvent.DESELECTED) {
+					tfRadiusForVelocity.setEditable(false);
+					tfVelocityAtRadius.setEditable(false);
+					lblUnitRadiusForVelocity.setForeground(Color.LIGHT_GRAY);
+					lblUnitkmAndArrow.setForeground(Color.LIGHT_GRAY);
+					lblUnitVelocityAtRadius1.setForeground(Color.LIGHT_GRAY);
+				}	
+			}
+		});
 	
 		
 		
@@ -434,7 +500,6 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		
 		tfArgOfPeri.getDocument().addDocumentListener(docListener);
 		tfPeriapsis.getDocument().addDocumentListener(docListener);
-		tfApoapsis.getDocument().addDocumentListener(docListener);
 		tfSemimajorAxis.getDocument().addDocumentListener(docListener);
 		tfEccentricity.getDocument().addDocumentListener(docListener);
 		tfInclination.getDocument().addDocumentListener(docListener);
@@ -442,9 +507,10 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfRAAN.getDocument().addDocumentListener(docListener);
 		tfPeriod.getDocument().addDocumentListener(docListener);
 		tfRadiusForVelocity.getDocument().addDocumentListener(docListener);
-		tfVelocityAtApoapsis.getDocument().addDocumentListener(docListener);
 		tfVelocityAtPeriapsis.getDocument().addDocumentListener(docListener);
+		tfVelocityAtApoapsis.getDocument().addDocumentListener(docListener);
 		tfVelocityAtRadius.getDocument().addDocumentListener(docListener);
+		tfApoapsis.getDocument().addDocumentListener(docListener);
 		
 		// kept this to remind me how to make a listener for individual tf's
 		/*tfArgOfPeri.getDocument().addDocumentListener(new DocumentListener() {
@@ -757,36 +823,38 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		}
 		
 		private void setCalculationsToRelevantTextFields() {
-			try {
-				System.out.println(" IN TRY BLOCK");
-				System.out.println("rp = " + Periapsis);
-				System.out.println("ra = " + Apoapsis) ;
-				System.out.println("a = " + SemimajorAxis);
-				System.out.println("e = " + Eccentricity);
-				System.out.println("R for V = " + RadiusForVelocity);
-				System.out.println("V at R = " + VelocityAtRadius);
-				System.out.println("V at A = " + VelocityAtApoapsis);
-				System.out.println("V at P = " + VelocityAtPeriapsis);
-				System.out.println("SME = " + SME);
-				System.out.println("T = " + Period);
+			
+//				System.out.println(" IN TRY BLOCK");
+//				System.out.println("rp = " + Periapsis);
+//				System.out.println("ra = " + Apoapsis) ;
+//				System.out.println("a = " + SemimajorAxis);
+//				System.out.println("e = " + Eccentricity);
+//				System.out.println("R for V = " + RadiusForVelocity);
+//				System.out.println("V at R = " + VelocityAtRadius);
+//				System.out.println("V at A = " + VelocityAtApoapsis);
+//				System.out.println("V at P = " + VelocityAtPeriapsis);
+//				System.out.println("SME = " + SME);
+//				System.out.println("T = " + Period);
 				
 			//tfArgOfPeri.setText();
-			tfPeriapsis.setText(Periapsis.toString());
-			tfApoapsis.setText(Apoapsis.toString());
-			tfSemimajorAxis.setText(SemimajorAxis.toString());
-			tfEccentricity.setText(Eccentricity.toString());
 			//tfInclination.setText(Inclination.toString());
-			tfRadiusForVelocity.setText(RadiusForVelocity.toString());
-			tfVelocityAtRadius.setText(VelocityAtRadius.toString());
-			tfVelocityAtApoapsis.setText(VelocityAtApoapsis.toString());
-			tfVelocityAtPeriapsis.setText(VelocityAtPeriapsis.toString());
-			tfSME.setText(SME.toString());
-			tfPeriod.setText(Period.toString());
 			//tfRAAN.setText(RAAN.toString());
+			tfPeriapsis.setText(String.format("%.1f", Periapsis));
+			tfApoapsis.setText(String.format("%.1f", Apoapsis));
+			tfSemimajorAxis.setText(String.format("%.1f", SemimajorAxis));
+			tfEccentricity.setText(String.format("%.5f", Eccentricity));
+			
+			// the following 2 text fields may not be in use. the if checks so as not to throw a null pointer exception
+			if (chckbxNewVelocityAtRadius.isSelected() == true) {
+				tfRadiusForVelocity.setText(String.format("%.1f", RadiusForVelocity));
+				tfVelocityAtRadius.setText(String.format("%.5f", VelocityAtRadius));
 			}
-			catch(NullPointerException ex) {
-				// message saying the following could not be calculated. 
-			}
+			
+			tfVelocityAtApoapsis.setText(String.format("%.5f", VelocityAtApoapsis));
+			tfVelocityAtPeriapsis.setText(String.format("%.5f", VelocityAtPeriapsis));
+			tfSME.setText(String.format("%.5f", SME));
+			tfPeriod.setText(String.format("%.5f", Period/60/60));
+			
 			
 			
 		}
