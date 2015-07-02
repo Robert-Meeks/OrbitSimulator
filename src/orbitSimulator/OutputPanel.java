@@ -45,7 +45,7 @@ public class OutputPanel extends JPanel {
 			private Shape _orbit;
 	
 	public OutputPanel() {
-		setLayout(new MigLayout("", "[133.00px][195.00,center][152.00]", "[][264.00px][][]"));
+		setLayout(new MigLayout("", "[181.00px][195.00,center][186.00]", "[][264.00px][][]"));
 		
 		JLabel lblGraphicalOutputPanelTitle = new JLabel("Graphical Outputs");
 		add(lblGraphicalOutputPanelTitle, "cell 1 0");
@@ -59,7 +59,7 @@ public class OutputPanel extends JPanel {
 		outputTopView.setBackground(Color.WHITE);
 		outputTopView.setBorder(null);
 		tabbedPane.addTab("Image Top view", null, outputTopView, null);
-		outputTopView.setLayout(new MigLayout("", "[433.00]", "[232.00,bottom]"));
+		outputTopView.setLayout(new MigLayout("", "[469.00]", "[285.00,bottom]"));
 		
 		canvasTopView = new CanvasTopView();
 		canvasTopView.setBounds(0, 0, 300, 200);
@@ -70,7 +70,7 @@ public class OutputPanel extends JPanel {
 		outputSideView = new JPanel();
 		outputSideView.setBackground(Color.WHITE);
 		tabbedPane.addTab("Image Side View", null, outputSideView, null);
-		outputSideView.setLayout(new MigLayout("", "[414.00]", "[:236.00:239.00,bottom]"));
+		outputSideView.setLayout(new MigLayout("", "[472.00]", "[:285.00:285.00,fill]"));
 		
 		canvasSideView = new CanvasSideView();
 		canvasSideView.setBackground(Color.WHITE);
@@ -80,7 +80,7 @@ public class OutputPanel extends JPanel {
 		outputAnimation = new JPanel();
 		outputAnimation.setBackground(Color.WHITE);
 		tabbedPane.addTab("2D Animation (Top View)", null, outputAnimation, null);
-		outputAnimation.setLayout(new MigLayout("", "[418.00]", "[236.00]"));
+		outputAnimation.setLayout(new MigLayout("", "[479.00]", "[285.00]"));
 		
 		canvasAnimation = new CanvasAnimation();
 		canvasAnimation.setBackground(Color.WHITE);

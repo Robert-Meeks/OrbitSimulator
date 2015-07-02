@@ -35,6 +35,8 @@ import java.awt.Color;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.JCheckBox;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	
@@ -108,13 +110,17 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	private JLabel lblub;
 	private JLabel lblKm;
 	private JLabel lblKm_1;
+	private JLabel lblNewLabel;
+	private JRadioButton rdbtnIllustrative;
+	private JRadioButton rdbtnAccurate;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 
 	EllipticalOrbitInputs()
 	{
 		setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		setLayout(new MigLayout("", "[22.00][18.00][29.00][74.00,grow][60.00][37.00,grow][79.00][44.00]", "[][][][12.00][][14.00][][center][][][][][][]"));
+		setLayout(new MigLayout("", "[22.00][18.00][29.00][74.00,grow][60.00][37.00,grow][79.00][44.00]", "[][][][12.00][][14.00][][center][][][][][][][]"));
 		
 		JLabel lblEllipticalOrbitInputs = new JLabel("Elliptical Orbit Inputs");
 		lblEllipticalOrbitInputs.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -333,7 +339,22 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		lblUnitHr = new JLabel("hr");
 		lblUnitHr.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(lblUnitHr, "cell 4 11");
-		add(btnCalculateEllipticalOrbit, "cell 4 12 4 2");
+		
+		lblNewLabel = new JLabel("Select scale");
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblNewLabel, "cell 1 12 2 1");
+		
+		rdbtnIllustrative = new JRadioButton("Illustrative");
+		buttonGroup.add(rdbtnIllustrative);
+		rdbtnIllustrative.setSelected(true);
+		rdbtnIllustrative.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(rdbtnIllustrative, "cell 3 12");
+		
+		rdbtnAccurate = new JRadioButton("Accurate");
+		buttonGroup.add(rdbtnAccurate);
+		rdbtnAccurate.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(rdbtnAccurate, "cell 4 12");
+		add(btnCalculateEllipticalOrbit, "cell 5 13 3 2");
 		
 		JLabel lblOrbitalPeriod = new JLabel("Orbital Period");
 		lblOrbitalPeriod.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
