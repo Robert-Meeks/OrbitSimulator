@@ -40,7 +40,8 @@ import javax.swing.ButtonGroup;
 
 public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	
-	// input text fields - NB need to add each new tf to getUserInputs() and a private parameter below  
+	// input text fields - NB need to add each new tf to getUserInputs() and a private parameter below
+	private String renderScale;
 	private  JTextField tfArgOfPeri;
 	private  JTextField tfPeriapsis;
 	private static  JTextField tfApoapsis;
@@ -567,10 +568,11 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("in actionPerformed(ActionEvent e)");
-			//getOrbitRenderScale();
+			getScaleForRendering();
 			mu = OrbitMainFrame.getOrbitingBodyData("mu");
 			calculateEllipticalOrbit();
-			newGraphicsListener.setNewGraphics();
+			newGraphicsListener.setNewGraphics(ArgOfPeri, Apoapsis, Periapsis, SemimajorAxis, Eccentricity, Inclination, 
+					VelocityAtRadius, RadiusForVelocity, VelocityAtApoapsis, VelocityAtPeriapsis, SME, RAAN, Period, renderScale);
 		}
 	//-----------------------------------------------
 	// FUNCTION METHODS	
@@ -877,6 +879,19 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			tfPeriod.setText(String.format("%.5f", Period/60/60));
 			
 			
+			
+		}
+		
+		private void getScaleForRendering() {
+			
+			if(rdbtnIllustrative.isSelected() == true)
+			{
+				renderScale = "illustrative";
+			}
+			else if(rdbtnAccurate.isSelected() == true)
+			{
+				renderScale = "Accurate";
+			}
 			
 		}
 		

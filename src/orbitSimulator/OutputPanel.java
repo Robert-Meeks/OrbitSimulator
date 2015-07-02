@@ -28,12 +28,25 @@ public class OutputPanel extends JPanel {
 	private Canvas canvasAnimation;
 	
 	// vars for calculated orbits (used to calculate rendering) (inputs to this class)
-			private double r;
-			private double v;
+		// Common to both
 			private double T;
 			private double epsilon;
 			private double i;
 			private String renderScale;
+		//circular
+			private double r;
+			private double v;
+		// Elliptical 
+			private Double ap;
+			private Double ra;
+			private Double rp;
+			private Double a;
+			private Double e;
+			private Double VatR;
+			private Double RforV;
+			private Double va;
+			private Double vp;
+			private Double RAAN;
 	// var used within this class and generated to pass to relevant canvas
 			private double I_r; // Convention Illustrative_radius
 			private double I_v;
@@ -176,8 +189,33 @@ public class OutputPanel extends JPanel {
 	
 	//==============================================================================================================================
 	//from elliptical
-		public void drawNewGraphics()
+		public void drawNewGraphics(Double ap, Double ra, Double rp, Double a, Double e, Double i, Double VatR, 
+				Double RforV, Double va, Double vp, Double epsilon, Double RAAN, Double T, String renderScale)
 		{
+			this.ap = ap; 
+			this.ra = ra;
+			this.rp = rp;
+			this.a = a;
+			this.e = e;
+			this.i = i;
+			this.VatR = VatR;
+			this.RforV = RforV;
+			this.va = va;
+			this.vp = vp;
+			this.epsilon = epsilon;
+			this.RAAN = RAAN;
+			this.T = T;
+			this.renderScale = renderScale;
+			calculateSetRenderEllipticalOrbitParams();
+		}
+		
+		private void calculateSetRenderEllipticalOrbitParams() {
+			if (renderScale.toLowerCase() == "illustrative") {
+				
+			}
+			else if (renderScale.toLowerCase() == "accurate") {
+				
+			}
 			
 		}
 
