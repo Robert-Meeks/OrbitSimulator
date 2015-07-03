@@ -210,8 +210,18 @@ public class OutputPanel extends JPanel {
 		}
 		
 		private void calculateSetRenderEllipticalOrbitParams() {
+			if (VatR == null) {
+				VatR = -0.0;
+			}
+			if (RforV == null) {
+				RforV = -0.0;
+			}
+			if (ta == null) {
+				ta = -0.0;
+			}
 			if (renderScale.toLowerCase() == "illustrative") {
-				
+				((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ ap, ra, rp, a, VatR, RforV, va, vp, ta, e);
+				((CanvasTopView) canvasTopView).reRender();
 			}
 			else if (renderScale.toLowerCase() == "accurate") {
 				

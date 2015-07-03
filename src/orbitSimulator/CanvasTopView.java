@@ -35,8 +35,22 @@ public class CanvasTopView extends Canvas {
 	// orbit
 	private Shape _orbit;
 	private static boolean _orbitColour = false;
+	private static String _orbitType;
+	// circular
 	private double _velocity = 0;
 	private double _radius = 0;
+	// eliptical
+	private static double _ap;
+	private static double _ra;
+	private static double _rp;
+	private static double _a;
+	private static double _VatR;
+	private static double _RforV;
+	private static double _va;
+	private static double _vp;
+	private static double _ta = 0; // default of 0 set for when it is a circular orbit.
+	private static double _e;
+	// render vals
 	private double xOffSet = 0;
 	private double yOffSet = 0;
 	private double orbitHeight = 0;
@@ -47,6 +61,7 @@ public class CanvasTopView extends Canvas {
 	private static double _orbitPositionY;
 	private static double _orbitV;
 	private static double _orbitR;
+	
 	
 	private ArrayList<Shape> _velocityArrow = new ArrayList<Shape>();
 	private ArrayList<Shape> _radiusArrow = new ArrayList<Shape>();
@@ -61,10 +76,14 @@ public class CanvasTopView extends Canvas {
 		_canvasH = (double)this.getHeight();
 		calcPositionOfPlanet();
 		calcPositionOfOrbit();
+		
 		calcPositionOfVectorV();
 		calcPositionOfVectorR();
 		calcPositionOFLblV();
 		calcPositionOFLblR();
+		if (_orbitType == "elliptical") { /* specific to elliptical */
+			
+		}
 		
 		System.out.println("in paint()");
 		// cast g to type Graphics2D - didnt understand the explanation I got from p800 in my java for dummies book
@@ -99,6 +118,8 @@ public class CanvasTopView extends Canvas {
 			// draw orbit track
 			_orbit = new Ellipse2D.Double(_orbitPositionX, _orbitPositionY, _orbitHeight, _orbitWidth); // args - (x, y, w, h)
 			System.out.println("before orbit?");
+			// set orbit rotation to take into account Arg of Peri
+			g2.rotate(Math.toRadians(_ta), _canvasW / 2, _canvasH / 2);
 			g2.setStroke(new BasicStroke((float) 0.8));
 			if(_orbitColour == true) {
 				g2.setPaint(Color.BLACK);
@@ -134,13 +155,13 @@ public class CanvasTopView extends Canvas {
 			System.out.println("in reprint()");
 			repaint();
 	}
-	
+	// from circular
 	public static void setIllustrativeTopViewParams(/*String planetColour,*/ double radius, double velocity, int canvasW, int canvasH) {
 		System.out.println("in setIllustrativeCircularParams()");
 		_orbitR = radius;
 		_orbitV = velocity;
-		
-		// check val
+		_orbitType = "circular";
+		// TEST vals are coming through correctly 
 		System.out.format("planet diameter = %f\n", (float)_planetDiameter);
 		System.out.format("planet position (x,y) = (%f,%f)\n", (float)_planetPositionX, (float)_planetPositionY);
 		System.out.format("orbit colour = " + _orbitColour + "\n");
@@ -148,9 +169,20 @@ public class CanvasTopView extends Canvas {
 		System.out.format("orbit width = %f\n", (float)_orbitWidth);
 		System.out.format("orbit position (x,y) = (%f,%f)\n", (float)_orbitPositionX, (float)_orbitPositionY);
 	}
-	public static void setIllustrativeTopViewParams(double ap, double ra, double rp, double VatR, double RforV, double va,
-			double vp, double ta /*true anomaly*/) {
-		
+	// from elliptical 
+	public static void setIllustrativeTopViewParams(double ap, double ra, double rp, double a, double VatR, double RforV, double va,
+			double vp, double ta, double e) {
+		_ap = ap;
+		_ra = ra; /* USED */
+		_rp = rp; /* USED */
+		_a = a; /* USED */
+		_VatR = VatR;
+		_RforV = RforV;
+		_va = va;
+		_vp = vp;
+		_ta = ta; /* USED */
+		_e = e; /* USED */
+		_orbitType = "eliptical";
 	}
 	
 	private void calcPositionOfPlanet() {
@@ -164,10 +196,28 @@ public class CanvasTopView extends Canvas {
 	}
 	private void calcPositionOfOrbit() {
 		_orbitColour = true;
-		_orbitWidth = _canvasH * 0.85;
-		_orbitHeight = _canvasH * 0.85;
-		_orbitPositionX = (_canvasW / 2) - (_orbitWidth / 2);
-		_orbitPositionY = (_canvasH / 2) - (_orbitHeight / 2);
+		
+		if (_orbitType == "circular") {
+			
+			_orbitWidth = _canvasH * 0.85;
+			_orbitHeight = _canvasH * 0.85;
+			_orbitPositionX = (_canvasW / 2) - (_orbitWidth / 2);
+			_orbitPositionY = (_canvasH / 2) - (_orbitHeight / 2);
+		} else if (_orbitType == "elliptical") {
+			// size 
+			if ((_ta <= 45) || (_ta >= 135 && _ta <= 225 ) || (_ta >= 315)) {
+				_orbitWidth = _canvasW * 0.5;
+				_orbitHeight = 2 * (0.5 * _orbitWidth * (Math.sqrt(1 - (_e * _e))));
+			} else if((_ta > 45  && _ta < 135) || (_ta > 225 && _ta < 315)) {
+				_orbitWidth = _canvasH * 0.5;
+				_orbitHeight = 2 * (0.5 * _orbitWidth * (Math.sqrt(1 - (_e * _e))));
+			} 
+			// position (NOT INCLUDING rotation for Arg of Periapsis. Rotation is done in the animation)
+			_orbitPositionX = (_canvasW / 2) - ((_rp / (_a)) * _orbitWidth);
+			_orbitPositionY = (_canvasH / 2) - (_orbitHeight / 2); 
+				
+		}
+		
 		
 	}
 
