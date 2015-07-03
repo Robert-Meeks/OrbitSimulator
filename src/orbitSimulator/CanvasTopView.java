@@ -148,7 +148,8 @@ public class CanvasTopView extends Canvas {
 		System.out.format("orbit width = %f\n", (float)_orbitWidth);
 		System.out.format("orbit position (x,y) = (%f,%f)\n", (float)_orbitPositionX, (float)_orbitPositionY);
 	}
-	public static void setIllustrativeTopViewParams() {
+	public static void setIllustrativeTopViewParams(double ap, double ra, double rp, double VatR, double RforV, double va,
+			double vp, double ta /*true anomaly*/) {
 		
 	}
 	
