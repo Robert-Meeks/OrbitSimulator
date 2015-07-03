@@ -37,16 +37,16 @@ public class OutputPanel extends JPanel {
 			private double r;
 			private double v;
 		// Elliptical 
-			private Double ap;
+			private Double ap; /* Argument of Periapsis */
 			private Double ra;
 			private Double rp;
 			private Double a;
 			private Double e;
-			private Double VatR;
-			private Double RforV;
+			private Double VatR; /* User defined velocity, either directly or calculated from radius or true anomaly the user has entered */
+			private Double RforV; /*User defined radius at a velocity might be calculated from a velocity or true anomaly the user has entered */
 			private Double va;
 			private Double vp;
-			private Double RAAN;
+			private Double ta; /* True Anomaly */
 	// var used within this class and generated to pass to relevant canvas
 			private double I_r; // Convention Illustrative_radius
 			private double I_v;
@@ -190,7 +190,7 @@ public class OutputPanel extends JPanel {
 	//==============================================================================================================================
 	//from elliptical
 		public void drawNewGraphics(Double ap, Double ra, Double rp, Double a, Double e, Double i, Double VatR, 
-				Double RforV, Double va, Double vp, Double epsilon, Double RAAN, Double T, String renderScale)
+				Double RforV, Double va, Double vp, Double epsilon, Double TrueAnomaly, Double T, String renderScale)
 		{
 			this.ap = ap; 
 			this.ra = ra;
@@ -203,7 +203,7 @@ public class OutputPanel extends JPanel {
 			this.va = va;
 			this.vp = vp;
 			this.epsilon = epsilon;
-			this.RAAN = RAAN;
+			this.ta = TrueAnomaly;
 			this.T = T;
 			this.renderScale = renderScale;
 			calculateSetRenderEllipticalOrbitParams();
