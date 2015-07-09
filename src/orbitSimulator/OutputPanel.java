@@ -224,6 +224,9 @@ public class OutputPanel extends JPanel {
 				((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ ap, ra, rp, a, VatR, RforV, va, vp, ta, e);
 				((CanvasTopView) canvasTopView).reRender();
 				canvasTopView.setVisible(true);
+				((CanvasSideView) canvasSideView).setIllustrativeSideViewParams(/*_planetColour,*/ ap, ra, rp, a, VatR, RforV, va, vp, ta, e, i);
+				((CanvasSideView) canvasSideView).reRender();
+				canvasSideView.setVisible(true);
 			}
 			else if (renderScale.toLowerCase() == "accurate") {
 				

@@ -82,10 +82,16 @@ public class CanvasTopView extends Canvas {
 		System.out.println("------- top view canvas Methods - position of...");
 		calcPositionOfPlanet();
 		calcPositionOfOrbit();
+		/* The IF (statement) below exists so that the dev of the necessary methods can be done without leaving the program un 
+		 * runnable. To test a method when implementing it take it out of the IF. if a demonstration is required or something
+		 * else is worked on instead and the method isnt full implemented yet it can be put in this IF so it isnt called for 
+		 * the specified orbit.*/
+		if (_orbitType == "circular") { 
 			calcPositionOfVectorV();
 			calcPositionOfVectorR();
 			calcPositionOFLblV();
 			calcPositionOFLblR();
+		}
 		System.out.println("------ END");
 		
 		// TESTS
@@ -250,22 +256,6 @@ public class CanvasTopView extends Canvas {
 		
 		
 	}
-
-	private void calcPositionOFLblR() {
-		_lblRy = (_canvasH / 2) + (( _orbitHeight / 2) * 0.85);
-		_lblRx = (_canvasW / 2) + (( _orbitWidth / 2) * 0.85);
-		//_lblR = _lblR + ((Double)_orbitR).toString();
-		
-	}
-
-
-	private void calcPositionOFLblV() {
-		_lblVy = (_canvasH / 2);
-		_lblVx = (_canvasW / 2) + ( _orbitWidth / 2) + 8;
-		//_lblV = _lblV + ((Double)_orbitV).toString();
-		
-	}
-
 	private void calcPositionOfVectorV() {
 		double offSetX = 0;
 		double offSetY = 0;
@@ -306,7 +296,7 @@ public class CanvasTopView extends Canvas {
 			_velocityArrow.add(v);
 		
 	}
-
+	
 	private void calcPositionOfVectorR() {
 		Shape r;
 		// main part of arrow
@@ -320,16 +310,32 @@ public class CanvasTopView extends Canvas {
 				_radiusArrow.add(r);
 	}
 
- private static double sin(double t) {
-	 double ans = Math.sin(t * D2R);
-	 return ans;
- }
- private static double cos(double t) {
-	 double ans = Math.cos(t * D2R);
-	 return ans;
- }
 	
+	private void calcPositionOFLblV() {
+		_lblVy = (_canvasH / 2);
+		_lblVx = (_canvasW / 2) + ( _orbitWidth / 2) + 8;
+		//_lblV = _lblV + ((Double)_orbitV).toString();
+		
+	}
+	
+	private void calcPositionOFLblR() {
+		_lblRy = (_canvasH / 2) + (( _orbitHeight / 2) * 0.85);
+		_lblRx = (_canvasW / 2) + (( _orbitWidth / 2) * 0.85);
+		//_lblR = _lblR + ((Double)_orbitR).toString();
+		
+	}
 
+
+// General helper methods --------------------------------------------------------
+
+	 private static double sin(double t) {
+		 double ans = Math.sin(t * D2R);
+		 return ans;
+	 }
+	 private static double cos(double t) {
+		 double ans = Math.cos(t * D2R);
+		 return ans;
+	 }
 	
 	
 }

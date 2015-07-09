@@ -16,7 +16,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class CanvasSideView extends Canvas {
-	// canvas 
+		// general constants
+		static double pi = Math.PI;
+		static double D2R = pi / 180;
+		double R2D = 180 / pi;
+		// canvas 
 		private double _canvasW;
 		private double _canvasH;
 		private Graphics g2;
@@ -33,7 +37,8 @@ public class CanvasSideView extends Canvas {
 		private static double _planetDiameter = 0;
 		private static double _planetPositionX = 0;
 		private static double _planetPositionY = 0;
-		// orbit
+		// orbit parameters 
+		private static String _orbitType;
 		private Shape _orbit;
 		private static boolean _orbitColour = false;
 		private double _velocity = 0;
@@ -42,7 +47,17 @@ public class CanvasSideView extends Canvas {
 		private double _orbitx2;
 		private double _orbity1;
 		private double _orbity2;
-		private static double _i;
+		private static double _i; 
+		private static double _ap = 0;
+		private static double _ra = 0;
+		private static double _rp = 0;
+		private static double _a = 0;
+		private static double _VatR = 0;
+		private static double _RforV = 0;
+		private static double _va = 0;
+		private static double _vp = 0;
+		private static double _ta = 0; // default of 0 set for when it is a circular orbit.
+		private static double _e = 0;
 		// equitirial plane
 		private double _ePlanex1;
 		private double _ePlaney1;
@@ -92,6 +107,7 @@ public class CanvasSideView extends Canvas {
 			}
 			g2.fill(_planet);
 			g2.draw(_planet);
+			
 			// Equatorial plane
 			g2.setPaint(new Color(182, 182, 182));
 			Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 9);
@@ -118,16 +134,33 @@ public class CanvasSideView extends Canvas {
 			
 			
 			
-		}
+		} // END paint
 		
+		public void reRender() {
+			System.out.println("in repaint for side view canvas");
+			repaint();
+		}
 		
 		public static void setIllustrativeSideViewParams(double i) {
 			_i = i;
-		}
-		public void reRender() {
-			repaint();
+			_orbitType = "circular";
 		}
 
+		public void setIllustrativeSideViewParams(Double ap, Double ra,	Double rp, Double a, Double VatR, Double RforV, 
+				Double va, Double vp, Double ta, Double e, Double i) {
+			_ap = ap; /* USED */
+			_ra = ra; /* USED */
+			_rp = rp; /* USED */
+			_a = a; /* USED */
+			_VatR = VatR;
+			_RforV = RforV;
+			_va = va;
+			_vp = vp;
+			_ta = ta; /* USED */
+			_e = e; /* USED */
+			_i = i; /* USED */
+			_orbitType = "elliptical";
+		}
 
 		private void calcPositionOfPlanet() {
 
@@ -137,15 +170,37 @@ public class CanvasSideView extends Canvas {
 			
 		}
 		private void calcPositionOfOrbit() {
+			double orbitLeftRadius = 0;
+			double orbitRightRadius = 0;
+			double orbitWidth = _canvasH * 0.85;
+			double i = _i;
+			if (_orbitType == "circular") {
+				orbitLeftRadius = orbitWidth / 2; 
+				orbitRightRadius = orbitLeftRadius;
+			} else if (_orbitType == "elliptical") {
+				double canvasRp = (_rp / (2 * _a)) * orbitWidth;
+				double canvasRa = (_ra / (2 * _a)) * orbitWidth;
+//				if (_ap <= 90 || _ap > 270) { // ie periapsis is on the left hand side of the canvas
+					orbitLeftRadius = canvasRp; // = Rp
+					orbitRightRadius = canvasRa; // = Ra
+//				} else if (_ap > 90 && _ap <= 270) { // ie apoapsis is on the left hand side of the canvas
+//					i = i * -1;
+//					orbitLeftRadius = canvasRa; // = Ra
+//					orbitRightRadius = canvasRp; // = Rp
+//				}
+			}
+			// left radius (side)
+			System.out.println("_canvasW = " + _canvasW);
+			System.out.println("_canvasH = " + _canvasH);
+			System.out.println("_i = " + _i);
+			_orbitx1 = (_canvasW / 2) - orbitLeftRadius * cos(i); 
+			_orbity1 = (_canvasH / 2) + orbitLeftRadius * sin(i);
+			System.out.println("orbit x1 and y1 respectively = " + _orbitx1 + _orbity1);
 			
-			double orbitR = (_canvasH / 2) * 0.85; // Math.tan(_i * Math.PI/180);
-			
-			_orbitx1 = (_canvasW / 2) - orbitR * Math.cos(_i * Math.PI / 180); 
-			_orbity1 = (_canvasH / 2) + orbitR * Math.sin(_i * Math.PI / 180);
-			
-			_orbitx2 = (_canvasW / 2) + orbitR * Math.cos(_i * Math.PI / 180); 
-			_orbity2 = (_canvasH / 2) - orbitR * Math.sin(_i * Math.PI / 180);
-			
+			// right radius (side)
+			_orbitx2 = (_canvasW / 2) + orbitRightRadius * cos(i); 
+			_orbity2 = (_canvasH / 2) - orbitRightRadius * sin(i);
+			System.out.println("orbit x2 and y2 respectively = " + _orbitx2 + _orbity2);
 		}
 		
 		private void calcEquitorialPlane() {
@@ -161,6 +216,18 @@ public class CanvasSideView extends Canvas {
 			I = new Arc2D.Double(new Rectangle2D.Double(_canvasW / 2 - ((_planetDiameter /2) * 1.8), _canvasH / 2 - ((_planetDiameter/2) * 1.8), _planetDiameter * 1.8, _planetDiameter * 1.8), 0, _i, Arc2D.OPEN);
 			_inclination.add(I);
 		}
+
+		// General helper methods --------------------------------------------------------
+
+		 private static double sin(double t) {
+			 double ans = Math.sin(t * D2R);
+			 return ans;
+		 }
+		 private static double cos(double t) {
+			 double ans = Math.cos(t * D2R);
+			 return ans;
+		 }
+		
 
 
 		
