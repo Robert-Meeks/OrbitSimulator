@@ -104,7 +104,8 @@ public class OutputPanel extends JPanel {
 		
 	} // END CONSTRUCTOR
 	//==============================================================================================================================
-	//from circular
+	
+	//---------from circular
 	public void drawNewGraphics(double r, double v, double T, double epsilon, String renderScale, double i)
 	{
 		// set vals
@@ -222,6 +223,7 @@ public class OutputPanel extends JPanel {
 			if (renderScale.toLowerCase() == "illustrative") {
 				((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ ap, ra, rp, a, VatR, RforV, va, vp, ta, e);
 				((CanvasTopView) canvasTopView).reRender();
+				canvasTopView.setVisible(true);
 			}
 			else if (renderScale.toLowerCase() == "accurate") {
 				

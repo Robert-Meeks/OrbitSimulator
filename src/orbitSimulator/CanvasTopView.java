@@ -15,6 +15,10 @@ import java.util.ArrayList;
 
 public class CanvasTopView extends Canvas {
 
+	// constants 
+	static double pi = Math.PI;
+	static double D2R = pi / 180;
+	double R2D = 180 / pi;
 	// canvas 
 	private double _canvasW;
 	private double _canvasH;
@@ -40,16 +44,16 @@ public class CanvasTopView extends Canvas {
 	private double _velocity = 0;
 	private double _radius = 0;
 	// eliptical
-	private static double _ap;
-	private static double _ra;
-	private static double _rp;
-	private static double _a;
-	private static double _VatR;
-	private static double _RforV;
-	private static double _va;
-	private static double _vp;
+	private static double _ap = 0;
+	private static double _ra = 0;
+	private static double _rp = 0;
+	private static double _a = 0;
+	private static double _VatR = 0;
+	private static double _RforV = 0;
+	private static double _va = 0;
+	private static double _vp = 0;
 	private static double _ta = 0; // default of 0 set for when it is a circular orbit.
-	private static double _e;
+	private static double _e = 0;
 	// render vals
 	private double xOffSet = 0;
 	private double yOffSet = 0;
@@ -74,13 +78,36 @@ public class CanvasTopView extends Canvas {
 		// calculations
 		_canvasW = (double)this.getWidth();
 		_canvasH = (double)this.getHeight();
+		
+		System.out.println("------- top view canvas Methods - position of...");
 		calcPositionOfPlanet();
 		calcPositionOfOrbit();
+			calcPositionOfVectorV();
+			calcPositionOfVectorR();
+			calcPositionOFLblV();
+			calcPositionOFLblR();
+		System.out.println("------ END");
 		
-		calcPositionOfVectorV();
-		calcPositionOfVectorR();
-		calcPositionOFLblV();
-		calcPositionOFLblR();
+		// TESTS
+		System.out.println("======= TEST SECTION - in top view convas ");
+		System.out.println("orbit type = " + _orbitType);
+		System.out.println("_planetPositionX = " + _planetPositionX);
+		System.out.println("_planetPositionY = " + _planetPositionY);
+		System.out.println("_planetDiameter = " + _planetDiameter);
+		System.out.println("_orbitingPlanet = " + _orbitingPlanet);
+		System.out.println("_orbitPositionX = " + _orbitPositionX);
+		System.out.println("_orbitPositionY = " + _orbitPositionY);
+		System.out.println("_orbitHeight = " + _orbitHeight);
+		System.out.println("_orbitWidth = " + _orbitWidth);
+		System.out.println("_ap = " + _ap);
+//		System.out.println("");
+//		System.out.println("");
+//		System.out.println("");
+//		System.out.println("");
+//		System.out.println("");
+		System.out.println("======= END TEST SECTION - canvas top view");
+		//------
+		
 		if (_orbitType == "elliptical") { /* specific to elliptical */
 			
 		}
@@ -116,10 +143,10 @@ public class CanvasTopView extends Canvas {
 			g2.draw(_planet);
 
 			// draw orbit track
-			_orbit = new Ellipse2D.Double(_orbitPositionX, _orbitPositionY, _orbitHeight, _orbitWidth); // args - (x, y, w, h)
+			_orbit = new Ellipse2D.Double(_orbitPositionX, _orbitPositionY, _orbitWidth, _orbitHeight); // args - (x, y, w, h)
 			System.out.println("before orbit?");
 			// set orbit rotation to take into account Arg of Peri
-			g2.rotate(Math.toRadians(_ta), _canvasW / 2, _canvasH / 2);
+			g2.rotate(Math.toRadians(_ap), _canvasW / 2, _canvasH / 2);
 			g2.setStroke(new BasicStroke((float) 0.8));
 			if(_orbitColour == true) {
 				g2.setPaint(Color.BLACK);
@@ -152,7 +179,7 @@ public class CanvasTopView extends Canvas {
 	}
 	
 	public void reRender() {
-			System.out.println("in reprint()");
+			System.out.println("in top view reprint()");
 			repaint();
 	}
 	// from circular
@@ -172,7 +199,7 @@ public class CanvasTopView extends Canvas {
 	// from elliptical 
 	public static void setIllustrativeTopViewParams(double ap, double ra, double rp, double a, double VatR, double RforV, double va,
 			double vp, double ta, double e) {
-		_ap = ap;
+		_ap = ap; /* USED */
 		_ra = ra; /* USED */
 		_rp = rp; /* USED */
 		_a = a; /* USED */
@@ -182,7 +209,7 @@ public class CanvasTopView extends Canvas {
 		_vp = vp;
 		_ta = ta; /* USED */
 		_e = e; /* USED */
-		_orbitType = "eliptical";
+		_orbitType = "elliptical";
 	}
 	
 	private void calcPositionOfPlanet() {
@@ -198,22 +225,25 @@ public class CanvasTopView extends Canvas {
 		_orbitColour = true;
 		
 		if (_orbitType == "circular") {
-			
+			System.out.println("circular orbit position calculated");
 			_orbitWidth = _canvasH * 0.85;
 			_orbitHeight = _canvasH * 0.85;
 			_orbitPositionX = (_canvasW / 2) - (_orbitWidth / 2);
 			_orbitPositionY = (_canvasH / 2) - (_orbitHeight / 2);
 		} else if (_orbitType == "elliptical") {
+			System.out.println("elliptical orbit position calculated");
 			// size 
-			if ((_ta <= 45) || (_ta >= 135 && _ta <= 225 ) || (_ta >= 315)) {
+			if ((_ap <= 45) || (_ap >= 135 && _ap <= 225 ) || (_ap >= 315)) {
+				System.out.println("if ------ calc orbit dimensions for canvas");
 				_orbitWidth = _canvasW * 0.5;
-				_orbitHeight = 2 * (0.5 * _orbitWidth * (Math.sqrt(1 - (_e * _e))));
-			} else if((_ta > 45  && _ta < 135) || (_ta > 225 && _ta < 315)) {
+			} else if((_ap > 45  && _ap < 135) || (_ap > 225 && _ap < 315)) {
+				System.out.println("else if ------ calc orbit dimensions for canvas");
 				_orbitWidth = _canvasH * 0.5;
-				_orbitHeight = 2 * (0.5 * _orbitWidth * (Math.sqrt(1 - (_e * _e))));
 			} 
+			_orbitHeight = 2 * (0.5 * _orbitWidth * (Math.sqrt(1 - (_e * _e))));
 			// position (NOT INCLUDING rotation for Arg of Periapsis. Rotation is done in the animation)
-			_orbitPositionX = (_canvasW / 2) - ((_rp / (_a)) * _orbitWidth);
+			
+			_orbitPositionX = (_canvasW / 2) - ((_rp / (2 * _a)) * _orbitWidth);
 			_orbitPositionY = (_canvasH / 2) - (_orbitHeight / 2); 
 				
 		}
@@ -236,6 +266,46 @@ public class CanvasTopView extends Canvas {
 		
 	}
 
+	private void calcPositionOfVectorV() {
+		double offSetX = 0;
+		double offSetY = 0;
+		if (_orbitType == "circular") {
+			offSetX = _orbitWidth / 2;
+			offSetY = _orbitHeight / 2;
+			
+		} else if (_orbitType == "elliptical") {
+			// get orbit dimensions as far as the canvas is concerned so km to pixels
+			double canvasRp = _orbitWidth * (_rp / (2 * _a));
+			double canvasRa = _orbitWidth * (_ra / (2 * _a));
+			double canvas_a = (canvasRp + canvasRa) / 2;
+			double r = canvas_a * (1 - _e * _e) /1 + _e * cos(_ta);
+			
+			if (_ta <= 90) {
+				offSetX = r * sin(_ta) ;
+				offSetY = r * cos(90 - _ta);
+			} else if (_ta > 90 && _ta <= 180) {
+				
+			} else if (_ta > 180 && _ta <= 270) {
+				
+			} else if (_ta > 270 && _ta <= 360) {
+				
+			}
+		}	
+			Shape v;
+			// vector origin
+			v = new Ellipse2D.Double((_canvasW/2) + (offSetX) - 1, (_canvasH/2), 2, 2);
+			_velocityArrow.add(v);
+			// main part of arrow
+			v = new Line2D.Double((_canvasW/2) + (offSetX), (_canvasH/2), (_canvasW/2) + (offSetX), (_canvasH/2)-50);
+			_velocityArrow.add(v);
+			// left bit
+			v = new Line2D.Double((_canvasW/2) + (offSetX), (_canvasH/2)-50, (_canvasW/2) + (offSetX)-7, (_canvasH/2)-43);
+			_velocityArrow.add(v);
+			// right bit 
+			v = new Line2D.Double((_canvasW/2) + (offSetX), (_canvasH/2)-50, (_canvasW/2) + (offSetX)+7, (_canvasH/2)-43);
+			_velocityArrow.add(v);
+		
+	}
 
 	private void calcPositionOfVectorR() {
 		Shape r;
@@ -250,22 +320,15 @@ public class CanvasTopView extends Canvas {
 				_radiusArrow.add(r);
 	}
 
-
-	private void calcPositionOfVectorV() {
-		Shape v;
-		// vector origin
-		v = new Ellipse2D.Double((_canvasW/2) + (_orbitWidth/2) - 1, (_canvasH/2), 2, 2);
-		_velocityArrow.add(v);
-		// main part of arrow
-		v = new Line2D.Double((_canvasW/2) + (_orbitWidth/2), (_canvasH/2), (_canvasW/2) + (_orbitWidth/2), (_canvasH/2)-50);
-		_velocityArrow.add(v);
-		// left bit
-		v = new Line2D.Double((_canvasW/2) + (_orbitWidth/2), (_canvasH/2)-50, (_canvasW/2) + (_orbitWidth/2)-7, (_canvasH/2)-43);
-		_velocityArrow.add(v);
-		// right bit 
-		v = new Line2D.Double((_canvasW/2) + (_orbitWidth/2), (_canvasH/2)-50, (_canvasW/2) + (_orbitWidth/2)+7, (_canvasH/2)-43);
-		_velocityArrow.add(v);
-	}
+ private static double sin(double t) {
+	 double ans = Math.sin(t * D2R);
+	 return ans;
+ }
+ private static double cos(double t) {
+	 double ans = Math.cos(t * D2R);
+	 return ans;
+ }
+	
 
 	
 	
