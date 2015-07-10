@@ -17,14 +17,14 @@ import net.miginfocom.swing.MigLayout;
 
 public class OutputPanel extends JPanel {
 	// tab panel
-	private JTabbedPane tabbedPane;
+	private static JTabbedPane tabbedPane;
 	// JPanels
 	private JPanel outputTopView;
 	private JPanel outputSideView;
 	private JPanel outputAnimation;
 	// canvases
-	private Canvas canvasTopView;
-	private Canvas canvasSideView;
+	private static Canvas canvasTopView;
+	private static Canvas canvasSideView;
 	private Canvas canvasAnimation;
 	
 	// vars for calculated orbits (used to calculate rendering) (inputs to this class)
@@ -232,6 +232,15 @@ public class OutputPanel extends JPanel {
 				
 			}
 			
+		}
+		public static void resetOutput() {
+			
+			System.out.println("=######################=");
+			//int zero = 0;
+			//tabbedPane.setSelectedIndex(zero);
+			
+			canvasTopView.setVisible(false);
+			canvasSideView.setVisible(false);
 		}
 
 }

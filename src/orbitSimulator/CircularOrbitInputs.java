@@ -21,7 +21,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 	private static JTextField tfVelocity;
 	private static JTextField tfSpecificMechanicalEnergy;
 	private static JTextField tfPeriod;
-	private JTextField tfInclination;
+	private static JTextField tfInclination;
 	private JRadioButton rdbtnIllustrative;
 	private JRadioButton rdbtnAccurate;
 	private JButton btnCalculateOrbit;
@@ -378,6 +378,8 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		tfVelocity.setText("");
 		tfSpecificMechanicalEnergy.setText("");
 		tfPeriod.setText("");
+		tfInclination.setText("");
+		OutputPanel.resetOutput();
 	}
 	//==============================================================================================================================
 	// Error handling

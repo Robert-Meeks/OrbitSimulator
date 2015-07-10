@@ -164,22 +164,24 @@ public class CanvasTopView extends Canvas {
 			g2.draw(_orbit);
 			System.out.println("after draw orbit");
 			
-			// velocity
-			g2.setPaint(Color.GREEN);
-			g2.setFont(new Font("Arial", Font.PLAIN, 10));
-			// draw velocity label
-			g2.drawString(_lblV + ((Double)_orbitV).toString() + " Km/s", (int)_lblVx, (int)_lblVy);
-			// draw velocity arrow
-			for(Shape v : _velocityArrow) {
-				g2.draw(v);
-			}
-			// draw radius label
-			g2.setPaint(Color.RED);
-			g2.drawString(_lblR + ((Double)_orbitR).toString() + " Km", (int)_lblRx, (int)_lblRy);
-
-			// draw radius arrow
-			for(Shape r : _radiusArrow) {
-				g2.draw(r);
+			if (_orbitType == "circular") {
+				// velocity
+				g2.setPaint(Color.GREEN);
+				g2.setFont(new Font("Arial", Font.PLAIN, 10));
+				// draw velocity label
+				g2.drawString(_lblV + ((Double)_orbitV).toString() + " Km/s", (int)_lblVx, (int)_lblVy);
+				// draw velocity arrow
+				for(Shape v : _velocityArrow) {
+					g2.draw(v);
+				}
+				// draw radius label
+				g2.setPaint(Color.RED);
+				g2.drawString(_lblR + ((Double)_orbitR).toString() + " Km", (int)_lblRx, (int)_lblRy);
+	
+				// draw radius arrow
+				for(Shape r : _radiusArrow) {
+					g2.draw(r);
+				}
 			}
 			
 	}

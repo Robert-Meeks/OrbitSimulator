@@ -52,6 +52,7 @@ public class OrbitMainFrame extends JFrame {
 		public static String orbitingBody = "null";
 		public static String manoeuvreType = "null";
 		public static HashMap<String, Double> orbitingBodyData;
+		private static String _orbitType;
 		// Parameterized components for comboboxes stored in respecive arraylists 
 			// OrbitTypes  
 			private String selectType = "Select Type"; // first entry
@@ -76,7 +77,7 @@ public class OrbitMainFrame extends JFrame {
 			final JComboBox comboBoxOrbitingBody; 
 			private JComboBox comboBoxManoeuvreType;
 	// OUTPUTS
-	private JPanel OuputPanel;
+	private JPanel outputPanel;
 
 	
 	// Constructor
@@ -285,22 +286,26 @@ public class OrbitMainFrame extends JFrame {
 		{
 		case "Select Type":
 			newScenario();
+			_orbitType = "none selected";
 			break;
 		case "Circular":
 			circularPanel.setVisible(true);
 			defaultInputPanel.setVisible(false);
 			ellipticalPanel.setVisible(false);
+			_orbitType = "circular";
 			break;
 		case "Elliptical":
 			ellipticalPanel.setVisible(true);
 			defaultInputPanel.setVisible(false);
 			circularPanel.setVisible(false);
 			//JOptionPane.showMessageDialog(null, "The functionality for this Orbit type has not yet been developed, please select another.");
+			_orbitType = "elliptical";
 			break;
 		case "Hyperbolic":
 			ellipticalPanel.setVisible(false);
 			defaultInputPanel.setVisible(true);
 			circularPanel.setVisible(false);
+			_orbitType = "hyperbolic";
 			JOptionPane.showMessageDialog(null, "Nothing has yet been implemented for this orbit type please select another.");
 			break;
 		default :
