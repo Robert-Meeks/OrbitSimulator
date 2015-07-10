@@ -332,7 +332,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		// get vars required 
 		double mu = OrbitMainFrame.getOrbitingBodyData("mu");
 		// change input var from string to double
-		double v = Double.parseDouble(velocity);
+		v = Double.parseDouble(velocity);
 		// work out answers
 		r = mu / (v * v); 
 		epsilon = - mu/ (2 * r);
@@ -346,7 +346,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		// get vars required 
 		double mu = OrbitMainFrame.getOrbitingBodyData("mu");
 		// change input var from string to double
-		double epsilon = Double.parseDouble(SME);
+		epsilon = Double.parseDouble(SME);
 		// work out answers
 		r = - mu / (2 * epsilon);
 		v = Math.sqrt(mu/r);
@@ -361,7 +361,7 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		// get vars required 
 		double mu = OrbitMainFrame.getOrbitingBodyData("mu");
 		// change input var from string to double
-		double T = Double.parseDouble(period);
+		T = Double.parseDouble(period);
 		// work out answers
 		r = Math.cbrt((Math.pow((T / (2*pi)), 2) * mu));
 		v = Math.sqrt(mu/r);

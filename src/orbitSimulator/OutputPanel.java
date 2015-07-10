@@ -47,12 +47,6 @@ public class OutputPanel extends JPanel {
 			private Double va;
 			private Double vp;
 			private Double ta; /* True Anomaly */
-	// var used within this class and generated to pass to relevant canvas
-			private double I_r; // Convention Illustrative_radius
-			private double I_v;
-			private double I_T;
-			private double I_epsilon;
-			private double I_i;
 			
 			private Shape _planet;
 			private Shape _orbit;
