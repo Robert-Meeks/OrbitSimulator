@@ -65,6 +65,8 @@ public class CanvasSideView extends Canvas {
 		private double _ePlaney2;
 		private String _ePlaneLbl = "Equitorial Plane";
 		
+		// inclination 
+		private int smallAngleOffset = 0;
 		private ArrayList<Shape> _inclination = new ArrayList<Shape>();
 		Point startDrag, endDrag;
 		Shape found = null;
@@ -129,8 +131,11 @@ public class CanvasSideView extends Canvas {
 				g2.draw(I);
 			}
 				// inclination label (degree symbol unicode u00B0)
+			if (_i <= 20) {
+				smallAngleOffset = 15;
+			}
 			g2.setFont(new Font("Arial", Font.PLAIN, 10));
-			g2.drawString("i = " + _i + "\u00B0", (int)((_canvasW / 2) + (_planetDiameter * 1.4f)), (int)(_canvasH / 2) - 4);
+			g2.drawString("i = " + String.format("%.0f", _i) + "\u00B0", (int)((_canvasW / 2) + (_planetDiameter * 1.4f)), (int)(_canvasH / 2) - 3 + smallAngleOffset);
 			
 			
 			
@@ -211,10 +216,12 @@ public class CanvasSideView extends Canvas {
 		}
 		
 		private void calcInclinationLbl() {
+			
 			Shape I;
 			
 			I = new Arc2D.Double(new Rectangle2D.Double(_canvasW / 2 - ((_planetDiameter /2) * 1.8), _canvasH / 2 - ((_planetDiameter/2) * 1.8), _planetDiameter * 1.8, _planetDiameter * 1.8), 0, _i, Arc2D.OPEN);
 			_inclination.add(I);
+			
 		}
 
 		// General helper methods --------------------------------------------------------

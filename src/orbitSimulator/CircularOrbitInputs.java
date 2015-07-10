@@ -320,10 +320,10 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		System.out.println("T = " + T);
 		
 		// put answers in relevant textFields
-		tfVelocity.setText(String.format("%.5f", v));
+		tfVelocity.setText(String.format("%.3f", v));
 		System.out.println("v = " + v);
-		tfSpecificMechanicalEnergy.setText(String.format("%.5f", epsilon));
-		tfPeriod.setText(String.format("%.5f", T));
+		tfSpecificMechanicalEnergy.setText(String.format("%.3f", epsilon));
+		tfPeriod.setText(String.format("%.3f", T));
 		
 		
 	}
@@ -338,9 +338,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		epsilon = - mu/ (2 * r);
 		T = 2 * pi * Math.sqrt(r*r*r / mu);
 		// put answers in relevant text fields
-		tfRadius.setText(String.format("%.5f", r));
-		tfSpecificMechanicalEnergy.setText(String.format("%.5f", epsilon));
-		tfPeriod.setText(String.format("%.5f", T));
+		tfRadius.setText(String.format("%.3f", r));
+		tfSpecificMechanicalEnergy.setText(String.format("%.3f", epsilon));
+		tfPeriod.setText(String.format("%.0f", T));
 	}
 	private void CalculateOrbitWithSME(String SME) { // NB SpecificMechanicalEnergy = SME = epsilon
 		// get vars required 
@@ -352,9 +352,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		v = Math.sqrt(mu/r);
 		T = 2 * pi * Math.sqrt(r*r*r / mu);
 		// put answers in relevant text fields
-		tfRadius.setText(String.format("%.5f", r));
-		tfVelocity.setText(String.format("%.5f", v));
-		tfPeriod.setText(String.format("%.5f", T));
+		tfRadius.setText(String.format("%.3f", r));
+		tfVelocity.setText(String.format("%.3f", v));
+		tfPeriod.setText(String.format("%.0f", T));
 	}
 	
 	private void CalculateOrbitWithPeriod(String period) {
@@ -367,9 +367,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		v = Math.sqrt(mu/r);
 		epsilon = - mu/ (2 * r);
 		// put answers in relevant text fields
-		tfRadius.setText(String.format("%.5f", r));
-		tfVelocity.setText(String.format("%.5f", v));
-		tfSpecificMechanicalEnergy.setText(String.format("%.5f", epsilon));
+		tfRadius.setText(String.format("%.3f", r));
+		tfVelocity.setText(String.format("%.3f", v));
+		tfSpecificMechanicalEnergy.setText(String.format("%.3f", epsilon));
 	}
 	public static void resetCircularPanel()
 	{
