@@ -234,8 +234,8 @@ public class CanvasTopView extends Canvas {
 		
 		if (_orbitType == "circular") {
 			System.out.println("circular orbit position calculated");
-			_orbitWidth = _canvasH * 0.85;
-			_orbitHeight = _canvasH * 0.85;
+			_orbitWidth = _canvasH * 0.9;
+			_orbitHeight = _canvasH * 0.9;
 			_orbitPositionX = (_canvasW / 2) - (_orbitWidth / 2);
 			_orbitPositionY = (_canvasH / 2) - (_orbitHeight / 2);
 		} else if (_orbitType == "elliptical") {

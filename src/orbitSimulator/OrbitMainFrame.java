@@ -87,7 +87,7 @@ public class OrbitMainFrame extends JFrame {
 		
 		// TOOLBAR - mig layout
 			JPanel toolbarPanel = new JPanel();//MainToolbar();
-			getContentPane().add(toolbarPanel, "cell 0 0 4 1,growx,aligny top");
+			getContentPane().add(toolbarPanel, "cell 0 0 3 1,growx,aligny top");
 			toolbarPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 			toolbarPanel.setLayout(new MigLayout("", "[][17.00][79.00][109.00px][][100px]", "[][16px][][]"));
 			
@@ -256,7 +256,7 @@ public class OrbitMainFrame extends JFrame {
 		// OUTPUT Panel
 			final JPanel outputPanel = new OutputPanel();
 			outputPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-			getContentPane().add(outputPanel, "cell 3 1,grow");
+			getContentPane().add(outputPanel, "cell 3 0 1 2,grow");
 		
 			
 		// listeners
