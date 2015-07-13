@@ -37,7 +37,7 @@ public class OutputPanel extends JPanel {
 			private double r;
 			private double v;
 		// Elliptical 
-			private Double ap; /* Argument of Periapsis */
+			private Double raan; 
 			private Double ra;
 			private Double rp;
 			private Double a;
@@ -129,7 +129,7 @@ public class OutputPanel extends JPanel {
 				{
 					//top view
 					System.out.println("in the if to select illustrative and call setIllustrativeCircularParams()");
-					((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ r, v, 388, 200);
+					((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ r, v);
 					System.out.println("call reRender()");
 					((CanvasTopView) canvasTopView).reRender();
 					canvasTopView.setVisible(true);
@@ -184,10 +184,10 @@ public class OutputPanel extends JPanel {
 	
 	//==============================================================================================================================
 	//from elliptical
-		public void drawNewGraphics(Double ap, Double ra, Double rp, Double a, Double e, Double i, Double VatR, 
+		public void drawNewGraphics(Double raan, Double ra, Double rp, Double a, Double e, Double i, Double VatR, 
 				Double RforV, Double va, Double vp, Double epsilon, Double TrueAnomaly, Double T, String renderScale)
 		{
-			this.ap = ap; 
+			this.raan = raan; 
 			this.ra = ra;
 			this.rp = rp;
 			this.a = a;
@@ -215,10 +215,10 @@ public class OutputPanel extends JPanel {
 				ta = -0.0;
 			}
 			if (renderScale.toLowerCase() == "illustrative") {
-				((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ ap, ra, rp, a, VatR, RforV, va, vp, ta, e);
+				((CanvasTopView) canvasTopView).setIllustrativeTopViewParams(/*_planetColour,*/ raan, ra, rp, a, VatR, RforV, va, vp, ta, e);
 				((CanvasTopView) canvasTopView).reRender();
 				canvasTopView.setVisible(true);
-				((CanvasSideView) canvasSideView).setIllustrativeSideViewParams(/*_planetColour,*/ ap, ra, rp, a, VatR, RforV, va, vp, ta, e, i);
+				((CanvasSideView) canvasSideView).setIllustrativeSideViewParams(/*_planetColour,*/ raan, ra, rp, a, VatR, RforV, va, vp, ta, e, i);
 				((CanvasSideView) canvasSideView).reRender();
 				canvasSideView.setVisible(true);
 			}

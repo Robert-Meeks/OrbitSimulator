@@ -272,9 +272,9 @@ public class OrbitMainFrame extends JFrame {
 			// elliptical
 			((EllipticalOrbitInputs) ellipticalPanel).setNewGraphics(new MainFrameListenerElliptical() {
 				//@Override
-				public void setNewGraphics(Double ap, Double ra, Double rp, Double a, Double e, Double i, Double VatR, 
+				public void setNewGraphics(Double raan, Double ra, Double rp, Double a, Double e, Double i, Double VatR, 
 						Double RforV, Double va, Double vp, Double epsilon, Double TrueAnomaly, Double T, String renderScale) {
-					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(ap, ra, rp, a, e, i, VatR, RforV, va, vp, 
+					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(raan, ra, rp, a, e, i, VatR, RforV, va, vp, 
 							epsilon, TrueAnomaly, T, renderScale);
 				}
 			});

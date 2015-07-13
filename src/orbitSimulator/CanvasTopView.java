@@ -44,7 +44,7 @@ public class CanvasTopView extends Canvas {
 	private double _velocity = 0;
 	private double _radius = 0;
 	// eliptical
-	private static double _ap = 0;
+	private static double _raan = 0;
 	private static double _ra = 0;
 	private static double _rp = 0;
 	private static double _a = 0;
@@ -105,7 +105,7 @@ public class CanvasTopView extends Canvas {
 		System.out.println("_orbitPositionY = " + _orbitPositionY);
 		System.out.println("_orbitHeight = " + _orbitHeight);
 		System.out.println("_orbitWidth = " + _orbitWidth);
-		System.out.println("_ap = " + _ap);
+		System.out.println("_ap = " + _raan);
 //		System.out.println("");
 //		System.out.println("");
 //		System.out.println("");
@@ -152,7 +152,7 @@ public class CanvasTopView extends Canvas {
 			_orbit = new Ellipse2D.Double(_orbitPositionX, _orbitPositionY, _orbitWidth, _orbitHeight); // args - (x, y, w, h)
 			System.out.println("before orbit?");
 			// set orbit rotation to take into account Arg of Peri
-			g2.rotate(Math.toRadians(_ap), _canvasW / 2, _canvasH / 2);
+			g2.rotate(Math.toRadians((_raan * -1) + 90), _canvasW / 2, _canvasH / 2);
 			g2.setStroke(new BasicStroke((float) 0.8));
 			if(_orbitColour == true) {
 				g2.setPaint(Color.BLACK);
@@ -191,7 +191,7 @@ public class CanvasTopView extends Canvas {
 			repaint();
 	}
 	// from circular
-	public static void setIllustrativeTopViewParams(/*String planetColour,*/ double radius, double velocity, int canvasW, int canvasH) {
+	public static void setIllustrativeTopViewParams(/*String planetColour,*/ double radius, double velocity) {
 		System.out.println("in setIllustrativeCircularParams()");
 		_orbitR = radius;
 		_orbitV = velocity;
@@ -205,9 +205,9 @@ public class CanvasTopView extends Canvas {
 		System.out.format("orbit position (x,y) = (%f,%f)\n", (float)_orbitPositionX, (float)_orbitPositionY);
 	}
 	// from elliptical 
-	public static void setIllustrativeTopViewParams(double ap, double ra, double rp, double a, double VatR, double RforV, double va,
+	public static void setIllustrativeTopViewParams(double raan, double ra, double rp, double a, double VatR, double RforV, double va,
 			double vp, double ta, double e) {
-		_ap = ap; /* USED */
+		_raan = raan; /* USED */
 		_ra = ra; /* USED */
 		_rp = rp; /* USED */
 		_a = a; /* USED */
@@ -241,12 +241,12 @@ public class CanvasTopView extends Canvas {
 		} else if (_orbitType == "elliptical") {
 			System.out.println("elliptical orbit position calculated");
 			// size 
-			if ((_ap <= 45) || (_ap >= 135 && _ap <= 225 ) || (_ap >= 315)) {
-				System.out.println("if ------ calc orbit dimensions for canvas");
-				_orbitWidth = _canvasW * 0.5;
-			} else if((_ap > 45  && _ap < 135) || (_ap > 225 && _ap < 315)) {
-				System.out.println("else if ------ calc orbit dimensions for canvas");
+			if ((_raan <= 45) || (_raan >= 135 && _raan <= 225 ) || (_raan >= 315)) {
+				System.out.println("IF ------ calc orbit dimensions for canvas");
 				_orbitWidth = _canvasH * 0.5;
+			} else if((_raan > 45  && _raan < 135) || (_raan > 225 && _raan < 315)) {
+				System.out.println("ELSE IF ------ calc orbit dimensions for canvas");
+				_orbitWidth = _canvasW * 0.5;
 			} 
 			_orbitHeight = 2 * (0.5 * _orbitWidth * (Math.sqrt(1 - (_e * _e))));
 			// position (NOT INCLUDING rotation for Arg of Periapsis. Rotation is done in the animation)

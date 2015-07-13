@@ -42,7 +42,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	
 	// input text fields - NB need to add each new tf to getUserInputs() and a private parameter below
 	private String renderScale;
-	private  JTextField tfArgOfPeri;
+	private  JTextField tfRaan;
 	private  JTextField tfPeriapsis;
 	private static  JTextField tfApoapsis;
 	private  JTextField tfSemimajorAxis;
@@ -56,7 +56,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	private JTextField tfVelocityAtPeriapsis;
 	private JTextField tfInclination;
 	
-	private Double ArgOfPeri = null;
+	private Double RAAN = null;
 	private Double Periapsis = null;
 	private Double Apoapsis = null;
 	private Double SemimajorAxis = null; 
@@ -71,7 +71,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	private Double VelocityAtPeriapsis = null;
 	private Double Inclination = null;
 	
-	private boolean ArgOfPeriAdded;
+	private boolean RaanAdded;
 	private boolean PeriapsisAdded;
 	private boolean ApoapsisAdded;
 	private boolean SemimajorAxisAdded; 
@@ -100,7 +100,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	JCheckBox chckbxNewVelocityAtRadius;
 	Color defaultBackground = Color.WHITE;
 	Color warningBackground = Color.decode("#FF9A9A");
-	private JLabel lblUnitsApoPeriRadius;
+	private JLabel lblUnitsRAAN;
 	private JLabel lblUnitsSemimajorAxis;
 	private JLabel lblUnitDegrees;
 	private JLabel lblUnitDegree1;
@@ -134,15 +134,15 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		add(lblEllipticalInputWarning, "cell 4 0 4 1");
 		
 		
-		JLabel lblArgumentOfPeriapsis = new JLabel("Arg of Periapsis");
-		lblArgumentOfPeriapsis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblArgumentOfPeriapsis, "cell 1 1 2 1");
+		JLabel lblRaan = new JLabel("RAAN");
+		lblRaan.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblRaan, "cell 1 1 2 1");
 		
-		tfArgOfPeri = new JTextField();
-		tfArgOfPeri.setBackground(Color.WHITE);
-		tfArgOfPeri.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(tfArgOfPeri, "cell 3 1,growx");
-		tfArgOfPeri.setColumns(10);
+		tfRaan = new JTextField();
+		tfRaan.setBackground(Color.WHITE);
+		tfRaan.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(tfRaan, "cell 3 1,growx");
+		tfRaan.setColumns(10);
 		
 		lblub = new JLabel("\u00B0");
 		add(lblub, "cell 4 1");
@@ -176,9 +176,9 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		tfApoapsis.setName("apoapsis");
 		
 		
-		lblUnitsApoPeriRadius = new JLabel("Km");
-		lblUnitsApoPeriRadius.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		add(lblUnitsApoPeriRadius, "cell 7 3");
+		lblUnitsRAAN = new JLabel("Km");
+		lblUnitsRAAN.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		add(lblUnitsRAAN, "cell 7 3");
 		
 		JLabel lblSemimajorAxis = new JLabel("Semimajor Axis");
 		lblSemimajorAxis.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -315,8 +315,8 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		
 		
 		// Listen for changes to textFields
-		tfArgOfPeri.getDocument().putProperty("owner", tfArgOfPeri); 
-		tfArgOfPeri.setName("argofperi");
+		tfRaan.getDocument().putProperty("owner", tfRaan); 
+		tfRaan.setName("raan");
 		tfPeriapsis.getDocument().putProperty("owner", tfPeriapsis);
 		tfPeriapsis.setName("periapsis");
 		tfSemimajorAxis.getDocument().putProperty("owner", tfSemimajorAxis);
@@ -425,8 +425,8 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		       // General logic
 		       String tfVal = "unassigned";
 		       switch(tfName) {
-		       case "argofperi":
-			       tfVal = tfArgOfPeri.getText();
+		       case "raan":
+			       tfVal = tfRaan.getText();
 		    	   break;
 		       case "periapsis":
 		    	   tfVal = tfPeriapsis.getText();
@@ -487,8 +487,8 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			   }
 		       
 		       switch(tfName) {
-		       case "argofperi":
-		    	   tfArgOfPeri.setBackground(background);
+		       case "raan":
+		    	   tfRaan.setBackground(background);
 		    	   break;
 		       case "periapsis":
 		    	   tfPeriapsis.setBackground(background);
@@ -533,7 +533,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		    }
 		};
 		
-		tfArgOfPeri.getDocument().addDocumentListener(docListener);
+		tfRaan.getDocument().addDocumentListener(docListener);
 		tfPeriapsis.getDocument().addDocumentListener(docListener);
 		tfSemimajorAxis.getDocument().addDocumentListener(docListener);
 		tfEccentricity.getDocument().addDocumentListener(docListener);
@@ -583,7 +583,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 			getScaleForRendering();
 			mu = OrbitMainFrame.getOrbitingBodyData("mu");
 			calculateEllipticalOrbit();
-			newGraphicsListener.setNewGraphics(ArgOfPeri, Apoapsis, Periapsis, SemimajorAxis, Eccentricity, Inclination, 
+			newGraphicsListener.setNewGraphics(RAAN, Apoapsis, Periapsis, SemimajorAxis, Eccentricity, Inclination, 
 					VelocityAtRadius, RadiusForVelocity, VelocityAtApoapsis, VelocityAtPeriapsis, SME, TrueAnomaly, Period, renderScale);
 		}
 	//-----------------------------------------------
@@ -759,13 +759,13 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 
 		private void getUserInputs() {
 			
-			if (isNumeric(tfArgOfPeri.getText()) == true) {
-				ArgOfPeri = Double.parseDouble(tfArgOfPeri.getText());
-				ArgOfPeriAdded = true;
+			if (isNumeric(tfRaan.getText()) == true) {
+				RAAN = Double.parseDouble(tfRaan.getText());
+				RaanAdded = true;
 				
 			}
 			else {
-				ArgOfPeriAdded = false;
+				RaanAdded = false;
 			}
 			//System.out.println("ArgOfPeri = " + ArgOfPeri);
 			
@@ -917,7 +917,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		}
 		
 		//===================================================
-				// MAIN MATHS METHODS
+				// ORBITAL ELEMENT METHODS
 		
 		private void calcSemimajorAxisWithPeriod(double T) {
 			SemimajorAxis = Math.cbrt((Math.pow((T / (2*pi)), 2) * mu));
@@ -1013,7 +1013,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		// ERROR CHECKING 
 		public static void setTextFieldCombinations(String tfName, String currentTextFieldIsEmpty) {
 			switch(tfName) {
-			case "argofperi": // NOT REQUIRED
+			case "raan": // NOT REQUIRED
 				if (currentTextFieldIsEmpty == "populated") /* make it so relevant tf's can't be edited */ {
 					
 				} else if (currentTextFieldIsEmpty == "empty") /* make all relevant fields editable */ {
