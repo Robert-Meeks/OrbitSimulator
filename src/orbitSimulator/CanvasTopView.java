@@ -9,8 +9,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Stroke;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class CanvasTopView extends Canvas {
@@ -65,12 +68,23 @@ public class CanvasTopView extends Canvas {
 	private static double _orbitPositionY;
 	private static double _orbitV;
 	private static double _orbitR;
+	private Double RAANr_x;
+	private Double RAANr_y;
+	// parameter normalised to canvas scale
+	private double canvasRa;
+	private double canvasRp;
+	private double canvas_a;
 	
 	
 	private ArrayList<Shape> _velocityArrow = new ArrayList<Shape>();
 	private ArrayList<Shape> _radiusArrow = new ArrayList<Shape>();
+	private ArrayList<Shape> _angleOfRaan = new ArrayList<Shape>();
 	Point startDrag, endDrag;
 	Shape found = null;
+	
+	// strokes
+	Stroke solid = new BasicStroke(1);
+	Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 9);
 	
 
 	public void paint(Graphics g)
@@ -80,8 +94,13 @@ public class CanvasTopView extends Canvas {
 		_canvasH = (double)this.getHeight();
 		
 		System.out.println("------- top view canvas Methods - position of...");
+		
 		calcPositionOfPlanet();
 		calcPositionOfOrbit();
+		calcScaledValuesForCanvas(); /* logically it would seem that this goes first but calcPositionOfOrbit() calculates 
+		 								the orbit width and it makes sence for this to remain so. perhaps this method would 
+		 								be better named calcTheRestOfTheScaledValuesForCanvas but that too long.*/
+		
 		/* The IF (statement) below exists so that the dev of the necessary methods can be done without leaving the program un 
 		 * runnable. To test a method when implementing it take it out of the IF. if a demonstration is required or something
 		 * else is worked on instead and the method isnt full implemented yet it can be put in this IF so it isnt called for 
@@ -91,6 +110,8 @@ public class CanvasTopView extends Canvas {
 			calcPositionOfVectorR();
 			calcPositionOFLblV();
 			calcPositionOFLblR();
+		} else if (_orbitType == "elliptical") {
+			calcPositionOfAries();
 		}
 		System.out.println("------ END");
 		
@@ -114,9 +135,6 @@ public class CanvasTopView extends Canvas {
 		System.out.println("======= END TEST SECTION - canvas top view");
 		//------
 		
-		if (_orbitType == "elliptical") { /* specific to elliptical */
-			
-		}
 		
 		System.out.println("in paint()");
 		// cast g to type Graphics2D - didnt understand the explanation I got from p800 in my java for dummies book
@@ -126,63 +144,103 @@ public class CanvasTopView extends Canvas {
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			
 			// draw planet
-			_planet = new Ellipse2D.Double(_planetPositionX, _planetPositionY, _planetDiameter, _planetDiameter); // args - (x, y, w, h)
-			
-			g2.setStroke(new BasicStroke((float) 0.8));
-			
-			switch(_orbitingPlanet) {
-				case "earth":
-					g2.setPaint(Color.decode("#848BFF"));
-					break;
-				case "mars":
-					g2.setPaint(Color.decode("#FF7878"));
-					break;
-				case "moon": 
-					g2.setPaint(Color.GRAY);
-					break;
-				default:
-					System.out.println("black");
-					g2.setPaint(Color.BLACK);
-					break;
-			}
-			g2.fill(_planet);
-			g2.draw(_planet);
+				_planet = new Ellipse2D.Double(_planetPositionX, _planetPositionY, _planetDiameter, _planetDiameter); // args - (x, y, w, h)
+				
+				g2.setStroke(new BasicStroke((float) 0.8));
+				
+				switch(_orbitingPlanet) {
+					case "earth":
+						g2.setPaint(Color.decode("#848BFF"));
+						break;
+					case "mars":
+						g2.setPaint(Color.decode("#FF7878"));
+						break;
+					case "moon": 
+						g2.setPaint(Color.GRAY);
+						break;
+					default:
+						System.out.println("black");
+						g2.setPaint(Color.BLACK);
+						break;
+				}
+				g2.fill(_planet);
+				g2.draw(_planet);
 
 			// draw orbit track
-			_orbit = new Ellipse2D.Double(_orbitPositionX, _orbitPositionY, _orbitWidth, _orbitHeight); // args - (x, y, w, h)
-			System.out.println("before orbit?");
-			// set orbit rotation to take into account Arg of Peri
-			g2.rotate(Math.toRadians((_raan * -1) + 90), _canvasW / 2, _canvasH / 2);
-			g2.setStroke(new BasicStroke((float) 0.8));
-			if(_orbitColour == true) {
-				g2.setPaint(Color.BLACK);
+				_orbit = new Ellipse2D.Double(_orbitPositionX, _orbitPositionY, _orbitWidth, _orbitHeight); // args - (x, y, w, h)
+				System.out.println("before orbit?");
+				// set orbit rotation to take into account raan
+				double raanOffset = 0;
+				if (_orbitType == "circular") {
+					raanOffset = 0;
+				} else if (_orbitType == "elliptical") {
+					raanOffset = 90;
+				}
+					
+				g2.rotate(Math.toRadians((_raan * -1) + 90), _canvasW / 2, _canvasH / 2);
+				g2.setStroke(new BasicStroke((float) 0.8));
+				if(_orbitColour == true) {
+					g2.setPaint(Color.BLACK);
+				}
+				else {
+					g2.setPaint(Color.RED);
+				}
+				System.out.println("before draw orbit");
+				g2.draw(_orbit);
+				// return canvas rotation to nutral 
+				g2.rotate(Math.toRadians((_raan) - 90), _canvasW / 2, _canvasH / 2);
+				
+				System.out.println("after draw orbit");
+			// draw labels specific to orbit type
+				if (_orbitType == "circular") {
+					// velocity
+					g2.setPaint(Color.GREEN);
+					g2.setFont(new Font("Arial", Font.PLAIN, 10));
+					// draw velocity label
+					g2.drawString(_lblV + String.format("%.2f", _orbitV) + " Km/s", (int)_lblVx, (int)_lblVy);
+					// draw velocity arrow
+					for(Shape v : _velocityArrow) {
+						g2.draw(v);
+					}
+					// draw radius label
+					g2.setPaint(Color.RED);
+					g2.drawString(_lblR + String.format("%.2f", _orbitR) + " Km", (int)_lblRx, (int)_lblRy);
+		
+					// draw radius arrow
+					for(Shape r : _radiusArrow) {
+						g2.draw(r);
+					}
+				} 
+				if (_orbitType == "elliptical") {
+					// aries ref line 
+						
+						g2.setPaint(new Color(182, 182, 182));
+				        g2.setStroke(dashed);
+						g2.drawLine(0, (int)(_canvasH / 2), (int)_canvasW / 2, (int)(_canvasH / 2));
+						g2.setFont(new Font("Wingdings", Font.PLAIN, 10));
+						g2.drawString("\u2648 ", 10, (int)(_canvasH / 2 - 4));
+						g2.setFont(new Font("Arial", Font.PLAIN, 10));
+						g2.drawString("(Aries)", 18, (int)(_canvasH / 2 - 4));
+					// RAAN label - needs to print after aries ref line so that its on top
+						// the line (radius of orbit at the raan)
+							//g2.rotate(Math.toRadians(_raan * -1), _canvasW / 2, _canvasH / 2);
+							g2.setStroke(solid);
+							g2.setPaint(Color.RED);
+							for(Shape l : _angleOfRaan) {
+								g2.draw(l);
+								
+							}
+						// curve to denote an angle 
+						// the angle label (omega = ##deg)
+							g2.setFont(new Font("Arial", Font.PLAIN, 10));
+							g2.drawString("\u03A9 = " + _raan + "\u00B0", RAANr_x.intValue() - 45, (RAANr_y.intValue()));
+							Shape I;
+							I = new Arc2D.Double(new Rectangle2D.Double(_canvasW / 2 - ((_planetDiameter /2) * 1.8), _canvasH / 2 - ((_planetDiameter/2) * 1.8), _planetDiameter * 1.8, _planetDiameter * 1.8), 180, _raan, Arc2D.OPEN);
+							//_inclination.add(I); <-- just draw it for now 
+							g2.draw(I);
+				
 			}
-			else {
-				g2.setPaint(Color.RED);
-			}
-			System.out.println("before draw orbit");
-			g2.draw(_orbit);
-			System.out.println("after draw orbit");
 			
-			if (_orbitType == "circular") {
-				// velocity
-				g2.setPaint(Color.GREEN);
-				g2.setFont(new Font("Arial", Font.PLAIN, 10));
-				// draw velocity label
-				g2.drawString(_lblV + String.format("%.2f", _orbitV) + " Km/s", (int)_lblVx, (int)_lblVy);
-				// draw velocity arrow
-				for(Shape v : _velocityArrow) {
-					g2.draw(v);
-				}
-				// draw radius label
-				g2.setPaint(Color.RED);
-				g2.drawString(_lblR + String.format("%.2f", _orbitR) + " Km", (int)_lblRx, (int)_lblRy);
-	
-				// draw radius arrow
-				for(Shape r : _radiusArrow) {
-					g2.draw(r);
-				}
-			}
 			
 	}
 	
@@ -218,6 +276,18 @@ public class CanvasTopView extends Canvas {
 		_ta = ta; /* USED */
 		_e = e; /* USED */
 		_orbitType = "elliptical";
+	}
+	
+	private void calcScaledValuesForCanvas() {
+		System.out.println("IN calcScaledValuesForCanvas");
+		System.out.println("Using - _orbitWidth = " + _orbitWidth + " _rp = " + _rp + " _a = " + _a);
+		canvasRp = _orbitWidth * (_rp / (2 * _a));
+		System.out.println("canvasRp = " + canvasRp);
+		canvasRa = _orbitWidth * (_ra / (2 * _a));
+		System.out.println("canvasRa = " + canvasRa);
+		canvas_a = (canvasRp + canvasRa) / 2;
+		System.out.println("canvas_a = " + canvas_a);
+		
 	}
 	
 	private void calcPositionOfPlanet() {
@@ -267,9 +337,7 @@ public class CanvasTopView extends Canvas {
 			
 		} else if (_orbitType == "elliptical") {
 			// get orbit dimensions as far as the canvas is concerned so km to pixels
-			double canvasRp = _orbitWidth * (_rp / (2 * _a));
-			double canvasRa = _orbitWidth * (_ra / (2 * _a));
-			double canvas_a = (canvasRp + canvasRa) / 2;
+			
 			double r = canvas_a * (1 - _e * _e) /1 + _e * cos(_ta);
 			
 			if (_ta <= 90) {
@@ -326,6 +394,28 @@ public class CanvasTopView extends Canvas {
 		//_lblR = _lblR + ((Double)_orbitR).toString();
 		
 	}
+	
+	private void calcPositionOfAries() {
+		Double r = canvas_a * (1 - (_e * _e) / (1 + (_e * cos(90))));
+		System.out.println("canvas_a = " + canvas_a + " _e = " + _e);
+		
+		if (_raan <= 90 || _raan > 270) {
+			RAANr_x = _canvasW / 2 - (r * cos(_raan));
+		} else {
+			RAANr_x = _canvasW / 2 + (r * cos(_raan));
+		}
+		if (_raan <= 180) {
+			RAANr_y = _canvasH / 2 + (r * sin(_raan));
+		} else {
+			RAANr_y = _canvasH / 2 - (r * sin(_raan));
+		}
+		Shape l;
+		l = new Line2D.Double((_canvasW/2), (_canvasH/2), RAANr_x, RAANr_y);
+		System.out.println("r (rad on canvas of orbit at raan, r_x (x2) and r_y (y2) = " + r + " " + RAANr_x + " " + RAANr_y + " respectively");
+		_angleOfRaan.add(l);
+		
+	}
+
 
 
 // General helper methods --------------------------------------------------------

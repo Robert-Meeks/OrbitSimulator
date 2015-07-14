@@ -48,8 +48,8 @@ public class OutputPanel extends JPanel {
 			private Double vp;
 			private Double ta; /* True Anomaly */
 			
-			private Shape _planet;
-			private Shape _orbit;
+			//private Shape _planet;
+			//private Shape _orbit;
 	
 	public OutputPanel() {
 		setLayout(new MigLayout("", "[181.00px][195.00,center][186.00]", "[][264.00px][][195.00]"));
