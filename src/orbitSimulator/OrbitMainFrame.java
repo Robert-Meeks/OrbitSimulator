@@ -331,6 +331,7 @@ public class OrbitMainFrame extends JFrame {
 		{
 		case "circular":
 			CircularOrbitInputs.resetCircularPanel();
+			
 			break;
 		case "elliptical":
 			EllipticalOrbitInputs.resetEllipticalPanel();

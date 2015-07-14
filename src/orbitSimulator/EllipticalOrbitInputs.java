@@ -42,19 +42,19 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	
 	// input text fields - NB need to add each new tf to getUserInputs() and a private parameter below
 	private String renderScale;
-	private  JTextField tfRaan;
-	private  JTextField tfPeriapsis;
+	private static  JTextField tfRaan;
+	private static  JTextField tfPeriapsis;
 	private static  JTextField tfApoapsis;
-	private  JTextField tfSemimajorAxis;
-	private  JTextField tfEccentricity;
-	private  JTextField tfPeriod;
-	private  JTextField tfTrueAnomaly;
-	private JTextField tfSME;
-	private JTextField tfRadiusForVelocity;
-	private JTextField tfVelocityAtRadius;
-	private JTextField tfVelocityAtApoapsis;
-	private JTextField tfVelocityAtPeriapsis;
-	private JTextField tfInclination;
+	private static  JTextField tfSemimajorAxis;
+	private static  JTextField tfEccentricity;
+	private static  JTextField tfPeriod;
+	private static  JTextField tfTrueAnomaly;
+	private static JTextField tfSME;
+	private static JTextField tfRadiusForVelocity;
+	private static JTextField tfVelocityAtRadius;
+	private static JTextField tfVelocityAtApoapsis;
+	private static JTextField tfVelocityAtPeriapsis;
+	private static JTextField tfInclination;
 	
 	private Double RAAN = null;
 	private Double Periapsis = null;
@@ -116,6 +116,7 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 	private JRadioButton rdbtnIllustrative;
 	private JRadioButton rdbtnAccurate;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JButton btnEllipticalReset;
 	
 
 	EllipticalOrbitInputs()
@@ -362,6 +363,14 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		buttonGroup.add(rdbtnAccurate);
 		rdbtnAccurate.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		add(rdbtnAccurate, "cell 4 12");
+		
+		btnEllipticalReset = new JButton("Reset");
+		btnEllipticalReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				resetEllipticalPanel();
+			}
+		});
+		add(btnEllipticalReset, "cell 4 13,aligny bottom");
 		add(btnCalculateEllipticalOrbit, "cell 5 13 3 2");
 		
 		JLabel lblOrbitalPeriod = new JLabel("Orbital Period");
@@ -861,8 +870,20 @@ public class EllipticalOrbitInputs extends JPanel implements ActionListener {
 		
 
 		public static void resetEllipticalPanel() {
-			
-			
+			tfRaan.setText("");
+			tfApoapsis.setText("");
+			tfPeriapsis.setText("");
+			tfSemimajorAxis.setText("");
+			tfEccentricity.setText("");
+			tfInclination.setText("");
+			tfRadiusForVelocity.setText("");
+			tfVelocityAtRadius.setText("");
+			tfTrueAnomaly.setText("");
+			tfVelocityAtPeriapsis.setText("");
+			tfVelocityAtApoapsis.setText("");
+			tfSME.setText("");
+			tfPeriod.setText("");
+			OutputPanel.resetOutput();
 		}
 		
 		private void setCalculationsToRelevantTextFields() {

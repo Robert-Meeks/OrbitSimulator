@@ -142,6 +142,10 @@ public class CanvasTopView extends Canvas {
 			g2.setRenderingHint(
 					RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
+			// paint canvas white 
+			Shape canvasReset = new Rectangle2D.Double(0, 0, _canvasW, _canvasH);
+			g2.setPaint(Color.WHITE);
+			g2.draw(canvasReset);
 			
 			// draw planet
 				_planet = new Ellipse2D.Double(_planetPositionX, _planetPositionY, _planetDiameter, _planetDiameter); // args - (x, y, w, h)
@@ -313,10 +317,10 @@ public class CanvasTopView extends Canvas {
 			// size 
 			if ((_raan <= 45) || (_raan >= 135 && _raan <= 225 ) || (_raan >= 315)) {
 				System.out.println("IF ------ calc orbit dimensions for canvas");
-				_orbitWidth = _canvasH * 0.5;
+				_orbitWidth = _canvasH * 0.6;
 			} else if((_raan > 45  && _raan < 135) || (_raan > 225 && _raan < 315)) {
 				System.out.println("ELSE IF ------ calc orbit dimensions for canvas");
-				_orbitWidth = _canvasW * 0.5;
+				_orbitWidth = _canvasW * 0.6;
 			} 
 			_orbitHeight = 2 * (0.5 * _orbitWidth * (Math.sqrt(1 - (_e * _e))));
 			// position (NOT INCLUDING rotation for Arg of Periapsis. Rotation is done in the animation)
