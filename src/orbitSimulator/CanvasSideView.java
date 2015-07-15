@@ -87,6 +87,10 @@ public class CanvasSideView extends Canvas {
 				g2.setRenderingHint(
 						RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
+				// paint canvas white 
+				Shape canvasReset = new Rectangle2D.Double(0, 0, _canvasW, _canvasH);
+				g2.setPaint(Color.WHITE);
+				g2.draw(canvasReset);
 			// planet
 	        _planet = new Ellipse2D.Double(_planetPositionX, _planetPositionY, _planetDiameter, _planetDiameter); // args - (x, y, w, h)
 				
@@ -127,9 +131,10 @@ public class CanvasSideView extends Canvas {
 			
 			//orbit labels
 				// inclination arc
-			for(Shape I : _inclination) {
-				g2.draw(I);
-			}
+			System.out.println("INCLINATION JUST BEFORE PAINT USES IT = " + _i);
+			System.out.println("AND ARRAY _inclination IS OF SIZE: " + _inclination.size());
+			g2.draw(_inclination.get(0));
+
 				// inclination label (degree symbol unicode u00B0)
 			if (_i <= 20) {
 				smallAngleOffset = 15;
@@ -220,8 +225,8 @@ public class CanvasSideView extends Canvas {
 			Shape I;
 			
 			I = new Arc2D.Double(new Rectangle2D.Double(_canvasW / 2 - ((_planetDiameter /2) * 1.8), _canvasH / 2 - ((_planetDiameter/2) * 1.8), _planetDiameter * 1.8, _planetDiameter * 1.8), 0, _i, Arc2D.OPEN);
-			_inclination.add(I);
-			
+			_inclination.add(0, I);
+			System.out.println("INCLINATION = " + _i);
 		}
 
 		// General helper methods --------------------------------------------------------
