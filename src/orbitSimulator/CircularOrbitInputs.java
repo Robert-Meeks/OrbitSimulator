@@ -43,6 +43,15 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 	//---HashMap<String, Double> orbitingBodyData; // hold the data of the planet the user has chosen to orbit. 
 	private String selectedInputVariable;
 	private String renderScale;
+	// for animation 
+	private static ArrayList<Double> thetaArray = new ArrayList<Double>();
+	private static ArrayList<Double> radiusArray = new ArrayList<Double>();
+	private static ArrayList<Double> localXArray = new ArrayList<Double>();
+	private static ArrayList<Double> localYArray = new ArrayList<Double>();
+	private static ArrayList<Double> globalXArray = new ArrayList<Double>();
+	private static ArrayList<Double> globalYArray = new ArrayList<Double>();
+	private static ArrayList<Double> canvasUArray = new ArrayList<Double>();
+	private static ArrayList<Double> canvasVArray = new ArrayList<Double>();
 	
 	// error params
 	private int anErrorOccured;
@@ -256,7 +265,9 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 			}*/
 			CalculateCircularOrbit();
 			i = Double.parseDouble(tfInclination.getText());
-			newGraphicsListener.setNewGraphics(r, v, T, epsilon, renderScale, i);
+			// calculate animation inputs required - vales made here are store in this class and sent as arguments through the listener architecture
+			CalculateCircularAnimationInputs();
+			newGraphicsListener.setNewGraphics(r, v, T, epsilon, renderScale, i, canvasUArray, canvasVArray);
 	}
 	
 	private void getScaleForRendering() {
@@ -299,6 +310,8 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 			CalculateOrbitWithPeriod(tfPeriod.getText());
 			break;
 		}
+		
+		
 		selectedInputVariable = null;
 	}
 	
@@ -381,6 +394,170 @@ public class CircularOrbitInputs extends JPanel implements ActionListener {
 		tfInclination.setText("");
 		OutputPanel.resetOutput();
 	}
+	private static void CalculateCircularAnimationInputs() {
+		System.out.println("In CalculateCircularAnimationInputs()");
+		System.out.println("--------------------------------------");
+		// assumptions send real values, will be scaled by the CanvasAnimation class 
+		// ### TO BE ARGS ###
+		double RAAN = 0; // if i refactor this need to install an IF in OrbitMainFrame to send RAAN = 0 in the case circular orbits are being calculated so thet the method has everything it needs  
+			 
+		
+		// var Constants
+		double pi = Math.PI;
+		double twoPi = pi * 2;
+
+		// General 
+		double t = 0;
+		double sun_mu = 132712440018000000000.0;
+		double x0 = 236;
+		double y0 = 217;
+		double a = 1.496E11;
+		double T = twoPi * Math.sqrt(Math.pow(a, 3) / sun_mu);
+		double n = twoPi / T;
+		double e = 0;
+		// calculate points
+		double iterator = 0.0025;
+		
+		// calculate theta 
+		double step = 0;
+		
+		while (t < T)	{
+			System.out.println("in theta while at iteration " + step);
+			t = T * step;
+			
+			double M = n * t;
+			
+			double j = 0;
+			/*let*/ double E = 0;
+			while (j < 15) {
+				E = M + (e * sin(E));
+				j++;
+			}
+			
+			double theta_R = (e - cos(E)) / ((e * cos(E)) - 1);
+			theta_R = Math.acos(theta_R);
+			double theta_ = theta_R * 180 / pi;
+			System.out.println("theta_ = " + theta_ + " and test theta_ + 2 = " + (theta_ + 2));
+			if (Double.isNaN(theta_)) { System.out.println("IT DOES THINK ITS NaN...");}
+			if (t < (0.5 * T)) {
+				if(theta_ == 0) {
+					thetaArray.add(theta_ + 0.001);
+				} else {
+					thetaArray.add(theta_);
+				}
+				//console.log("at " + i + "T theta = " + theta_);
+			} else if (t > 0.5 * T) {
+				thetaArray.add(180 - theta_ + 180);
+				//console.log("at " + i + "T theta = " + (180 - theta_ + 180));
+			}
+			
+			step = step + iterator;
+		}
+		// calculate radius
+		int thetaArrayLength = thetaArray.size();
+		int i = 0;
+		for (i = 0; i < thetaArrayLength; i++) {
+			double theta_ = thetaArray.get(i);
+			double theta_R = theta_ * Math.PI / 180;
+	
+			double r = (a * (1 - (e * e)) / (1 + (e * cos(theta_R))));
+			radiusArray.add(r);
+			//console.log("r = " + r);
+		}
+		// polar to local
+			// x
+		i = 0;
+		
+		double scaler = 1345274666.7;
+		for (i = 0; i < thetaArrayLength; i++) {
+			double theta_ = thetaArray.get(i);// need to get scale here 
+			double r = radiusArray.get((int) i);
+			double lx = 0;
+			double ly = 0;
+			
+			// x
+			if (theta_ <= 90) { 
+				lx = (r / scaler) * Math.cos(theta_ * Math.PI / 180);
+				//console.log("when theta is < 90 lx = " + lx);
+			} else if (theta_ <= 180) {
+				lx = -1*((r / scaler) * Math.cos((180 - theta_) * Math.PI / 180));
+				//console.log("when theta is < 180 lx = " + lx);
+			} else if (theta_ <= 270) {
+				lx = (r / scaler) * Math.cos((theta_) * Math.PI / 180);
+				//console.log("when theta is < 270 lx = " + lx);
+			} else if (theta_ <= 360) {
+				lx = (r / scaler) * Math.cos((theta_) * Math.PI / 180);
+				//console.log("when theta is < 360 lx = " + lx);
+			}
+			localXArray.add(lx);
+		
+			// y
+			if (theta_ <= 90) { 
+				ly = (r / scaler) * Math.sin(theta_ * Math.PI / 180);
+				//console.log("when theta is < 90 ly = " + ly);
+			} else if (theta_ <= 180) {
+				ly = (r / scaler) * Math.sin((180 - theta_) * Math.PI / 180);
+				//console.log("when theta is < 180 ly = " + ly);
+				
+			} else if (theta_ <= 270) {
+				ly = (r / scaler) * Math.sin(theta_ * Math.PI / 180);
+				//console.log("when theta is < 270 ly = " + ly);
+			} else if (theta_ <= 360) {
+				ly = (r / scaler) * Math.sin(theta_ * Math.PI / 180);
+				//console.log("when theta is < 360 ly = " + ly);
+			}
+			localYArray.add(ly);
+		}
+		
+		// local to global
+		i=0;
+		int j = localYArray.size();
+		for ( i = 0; i < j; i++) {
+			// get vals 
+			double lx = localXArray.get(i);
+			double ly = localYArray.get(i);
+			//x
+			double gx = lx * cos(RAAN * pi / 180) - ly * sin(RAAN * pi / 180);
+			globalXArray.add(gx);
+			//console.log("gx = " + gx);
+			//y
+			double gy = lx * sin(RAAN * pi / 180) + ly * cos(RAAN * pi / 180);
+			globalYArray.add(gy);
+			//console.log("gy = " + gy);
+			//console.log("");
+		}
+		// global to UV (canvas)
+		i = 0;
+		int globalArrayLength = globalXArray.size();
+		for (i = 0; i < globalArrayLength; i++) {
+			double gx = globalXArray.get(i);
+			double gy = globalYArray.get(i);
+
+			double u = gx + x0;
+			double v = y0 - gy;
+			
+			canvasUArray.add(u);
+			canvasVArray.add(v);
+
+			//console.log("u = " + u);
+			//console.log("v = " + v);
+			//console.log("");
+			
+		}
+		
+		// NB helper functions cos and sin
+	}
+		//-------------------------------
+		// helpers
+		private static double cos(double a) {
+			double ans = Math.cos(a);
+			return ans;
+		}
+
+		private static double sin(double a) {
+			double ans = Math.sin(a);
+			return ans;
+		}
 	//==============================================================================================================================
 	// Error handling
 	private void CheckInputsBeforeCalculation() {

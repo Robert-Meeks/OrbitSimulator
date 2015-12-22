@@ -264,8 +264,8 @@ public class OrbitMainFrame extends JFrame {
 			((CircularOrbitInputs) circularPanel).setNewGraphics(new MainFrameListener(/*r, v, T, epsilon, i*/) {
 				//@Override
 				public void setNewGraphics(double r, double v, double T,
-						double epsilon, String renderScale, double i) {
-					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(r,v,T,epsilon, renderScale,i);
+						double epsilon, String renderScale, double i, ArrayList<Double> canvasUArray, ArrayList<Double> canvasVArray) {
+					((orbitSimulator.OutputPanel) outputPanel).drawNewGraphics(r,v,T,epsilon, renderScale,i, canvasUArray, canvasVArray);
 				}
 				
 			});

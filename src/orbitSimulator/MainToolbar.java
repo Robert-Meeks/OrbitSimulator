@@ -188,7 +188,7 @@ public class MainToolbar extends JPanel implements MainFrameListener {
 
 	@Override
 	public void setNewGraphics(double r, double v, double T, double epsilon,
-			String renderScale, double i) {
+			String renderScale, double i, ArrayList<Double> canvasUArray, ArrayList<Double> canvasVArray) {
 		// TODO Auto-generated method stub
 		
 	}

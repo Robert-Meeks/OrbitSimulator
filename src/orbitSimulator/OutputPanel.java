@@ -3,6 +3,9 @@ package orbitSimulator;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Shape;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -92,16 +95,45 @@ public class OutputPanel extends JPanel {
 		
 		canvasAnimation = new CanvasAnimation();
 		canvasAnimation.setBackground(Color.WHITE);
+		((CanvasAnimation) canvasAnimation).SetCanvasW(canvasAnimation.getWidth());
+		((CanvasAnimation) canvasAnimation).SetCanvasH(canvasAnimation.getHeight());
 		outputAnimation.add(canvasAnimation, "cell 0 0,aligny center,grow");
 		
+		/* [I have made the size og the canvas constant so this is redundant as it cant be changed]
+		canvasAnimation.addComponentListener(new ComponentListener() {// HERE - im trying to listen for change in canvas size (not needed but would be good to do) i think i need to declare ComponentEvent at the top 
+			@Override
+			public void componentResized(ComponentEvent e) {
+				//Get size of frame and do cool stuff with it 
+				System.out.println("THE LISTENER WORKS");
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});*/
 		
 		
 		
 	} // END CONSTRUCTOR
 	//==============================================================================================================================
 	
+	
 	//---------from circular
-	public void drawNewGraphics(double r, double v, double T, double epsilon, String renderScale, double i)
+	public void drawNewGraphics(double r, double v, double T, double epsilon, String renderScale, double i, ArrayList<Double> canvasUArray, ArrayList<Double> canvasVArray)
 	{
 		// set vals
 		this.r = r;
@@ -112,6 +144,10 @@ public class OutputPanel extends JPanel {
 		this.renderScale = renderScale;
 		System.out.println("in drawNewGraphics() and call calculateSetRenderCircularOrbitParams();");
 		calculateSetRenderCircularOrbitParams();
+		
+		// - NEW bit for animation 
+		((CanvasAnimation) canvasAnimation).AnimationControl(canvasUArray, canvasVArray);
+		// - END new bit for animation 
 		
 	}
 	
