@@ -27,53 +27,54 @@ public class CanvasAnimation extends Canvas implements ActionListener {
 	private ArrayList<Double> _coordListV = new ArrayList<Double>();
 	private int u;
 	private int v;
+	private Double RAAN = 0.0;
 	private int step = 0;
 	//private ActionListener gListener;
 	private Timer gTimer = new Timer(30, this);
 			/* Do I do the calculations in this class for the animation or do I do them in the output panel?? 
 	how do i buffer the animation? prob best to create all the information and then set it going. however i did 
 	figure out how to do double buffering in the asteroid dodge applet so maybe copy this across??? in which case 
-	it can probably work it out as it goes but may stilll need to calc all the point anyway NNB the javascript animation
+	it can probably work it out as it goes but may still need to calc all the point anyway NNB the javascript animation
 	is there to be used as well!!!!  */
 	private boolean flipper = true;
+	private boolean setRAAN = false;
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setRenderingHint(
 				RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		Shape canvasReset = new Rectangle2D.Double(0, 0, this.getWidth(), this.getHeight());
+		
 		g2.setPaint(Color.WHITE);
 		g2.setPaint(Color.BLACK);
 		g2.draw(canvasReset);
-//		g2.setFont(new Font("Arial", Font.PLAIN, 24));
-//		g2.drawString("Not implemented yet.", 30, 55);
-//		g2.setFont(new Font("Arial", Font.PLAIN, 12));
-//		g2.drawString("- I have the algorithm for the animation ", 50, 80);
-//		g2.drawString("(tested in JavaScript), I just need to learn", 60, 100);
-//		g2.drawString("how to animate on a canvas in Java to animate.", 60, 120);
+
 		
 		// draw planet 
 		g2.setPaint(Color.BLUE);
 		g2.fillOval(((this.getWidth() / 2)-5), ((this.getHeight() / 2)-5), 10, 10);
-		// draw satellite 
+		// draw satellite NB need to correct RAAN of the orbit and then return to normal each loop
+		double t = -90 - RAAN;
+		//System.out.println("%%%%%%%%%%%%%%%%%% t = "+ t);
+		g2.rotate(t, 236, 217);
+		
 		g2.setPaint(Color.RED);
 		g2.fillOval(u, v, 5, 5);
 		
-//		if(flipper == true) {
-//			g2.setPaint(Color.RED);
-//			flipper = false;
-//		} else {
-//			g2.setPaint(Color.GREEN);
-//			flipper = true;
-//		}
+		t = 90 + RAAN;
+		//System.out.println("%%%%%%%%%%%%%% t = "+ t);
+		g2.rotate(t, 236, 217);
+		
+		// draw the red lines
 		g2.drawLine(10, 0, 10, 440);
 		g2.drawLine(470, 0, 470, 440);
 		g2.drawLine(0, 10, 480, 10);
 		g2.drawLine(0, 430, 480, 430);
 	}
 	
-	// - NEW bit for animation 
-	public void AnimationControl(ArrayList<Double> canvasUArray, ArrayList<Double> canvasVArray) {
+	// - NEW bit for animation
+	// circular 
+	public void AnimationControl(ArrayList<Double> canvasUArray, ArrayList<Double> canvasVArray, Double raan) {
 //		int arrayU = canvasUArray.size();
 //		for(int i = 0; i < arrayU; i++) {
 //			System.out.println("U values - " + canvasUArray.get(i));
@@ -85,6 +86,9 @@ public class CanvasAnimation extends Canvas implements ActionListener {
 		_coordListV = canvasVArray;
 		System.out.println("CanvasW = " + this.getWidth());
 		System.out.println("CanvasH = " + this.getHeight());
+		Double RAAN = raan;
+		System.out.println("%%%%%%%%%%%%%%    raan = " + raan);
+		System.out.println("%%%%%%%%%%%%%%    RAAN = " + RAAN);
 		
 		gTimer.start();
 	}

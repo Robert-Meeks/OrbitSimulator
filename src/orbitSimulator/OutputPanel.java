@@ -146,7 +146,7 @@ public class OutputPanel extends JPanel {
 		calculateSetRenderCircularOrbitParams();
 		
 		// - NEW bit for animation 
-		((CanvasAnimation) canvasAnimation).AnimationControl(canvasUArray, canvasVArray);
+		((CanvasAnimation) canvasAnimation).AnimationControl(canvasUArray, canvasVArray, 0.0);
 		// - END new bit for animation 
 		
 	}
@@ -222,7 +222,7 @@ public class OutputPanel extends JPanel {
 	//==============================================================================================================================
 	//from elliptical
 		public void drawNewGraphics(Double raan, Double ra, Double rp, Double a, Double e, Double i, Double VatR, 
-				Double RforV, Double va, Double vp, Double epsilon, Double TrueAnomaly, Double T, String renderScale)
+				Double RforV, Double va, Double vp, Double epsilon, Double TrueAnomaly, Double T, String renderScale, ArrayList<Double> canvasUArray, ArrayList<Double> canvasVArray)
 		{
 			this.raan = raan; 
 			this.ra = ra;
@@ -239,6 +239,9 @@ public class OutputPanel extends JPanel {
 			this.T = T;
 			this.renderScale = renderScale;
 			calculateSetRenderEllipticalOrbitParams();
+			// - NEW bit for animation 
+			((CanvasAnimation) canvasAnimation).AnimationControl(canvasUArray, canvasVArray, raan);
+			// - END new bit for animation 
 		}
 		
 		private void calculateSetRenderEllipticalOrbitParams() {
